@@ -1,0 +1,28 @@
+/* ----------------------User code--------------------*/
+
+package src;
+   
+/* ------------Grammar symbol declarations----------- */
+   
+terminal    PLUS, MINUS, TIMES;
+terminal Integer    NUMBER;
+non terminal    program;
+non terminal Integer    expr;
+
+/* Precedences */
+precedence left PLUS, MINUS;
+precedence left TIMES;
+   
+/* ------------Grammar rules----------- */
+
+program ::= expr:e {: System.out.println("Evaluation result = " + e); :};
+   
+expr    ::= expr:e1 PLUS expr:e2
+                {: RESULT = e1 + e2; :}
+            | expr:e1 MINUS expr:e2
+                {: RESULT = e1 - e2; :}
+            | expr:e1 TIMES expr:e2
+                {: RESULT = e1 * e2; :}
+            | NUMBER:n
+                {: RESULT = n; :};
+           

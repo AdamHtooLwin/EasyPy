@@ -1,0 +1,38 @@
+/* ----------------------User code--------------------*/
+
+package src;
+   
+/* ------------Grammar symbol declarations----------- */
+   
+terminal    PLUS, MINUS, TIMES, DIVIDE, LPAR, RPAR;
+terminal Integer    NUMBER;
+non terminal    program;
+non terminal Integer    expr, E, T, F;
+
+/* Precedences */
+precedence left PLUS, MINUS;
+precedence left TIMES;
+   
+/* ------------Grammar rules----------- */
+
+program ::= E:e {: System.out.println("Evaluation result = " + e); :};
+   
+E    ::= E:e PLUS T:t
+                {: RESULT = e + t; :}
+            | E:e MINUS T:t
+                {: RESULT = e - t; :}
+            | T:t
+                {: RESULT = t; :};
+
+T       ::= T:t TIMES F:f
+                {: RESULT = t * f; :}
+            | T:t DIVIDE F:f
+                {: RESULT = t / f; :}
+            | F:f
+                {: RESULT = f; :};
+
+F       ::= LPAR E:e RPAR
+                {: RESULT = (e); :}
+            | NUMBER:n
+                {: RESULT = n; :};
+           

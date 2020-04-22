@@ -55,14 +55,14 @@
   </target>
 
   <target name="cup" depends = "init">
-    <cup srcfile="${cup}/ycalc.cup"
+    <cup srcfile="${cup}/easypy.cup"
          destdir="${java}"
     />
   </target>
 
 
   <target name="jflex" depends="cup">
-    <jflex file="${flex}/lcalc.flex" destdir="${java}" />
+    <jflex file="${flex}/easypy.flex" destdir="${java}" />
   </target>
 
  

@@ -1,6 +1,9 @@
 /.idea
 
-/easypy/src/*.java
+/easypy/src/parser.java
+/easypy/src/Lexer.java
+/easypy/src/sym.java
+
 /easypy/classes
 /easypy/dist/parser.jar
 /out

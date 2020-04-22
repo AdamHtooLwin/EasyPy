@@ -76,11 +76,19 @@ LineTerminator = \r|\n|\r\n
 
 WhiteSpace     = {LineTerminator} | [ \t\f]
 
-/* A literal integer is is a number beginning with a number between
-   one and nine followed by zero or more numbers between zero and nine
-   or just a zero.  */
+// helpers
+dot = "."
+alphabet = [a-zA-Z ]*
+digit    = [0-9]*
+specials = [!|@|#|$|%|\^|&|*|(|)]*
 
+// Data types
 int = 0 | [1-9][0-9]*
+float = [0-9]+{dot}[0-9]+
+char   = \'{alphabet}{specials}{digit}\'
+id = [A-Za-z_][A-Za-z_0-9]*
+
+boolean = true|false
 
 %%
 /* ------------------------Lexical Rules Section---------------------- */
@@ -97,8 +105,25 @@ int = 0 | [1-9][0-9]*
     "/"        { debug("DIVIDE"); return symbol(sym.DIVIDE); }
     "("        { debug("LPAR"); return symbol(sym.LPAR); }
     ")"        { debug("RPAR"); return symbol(sym.RPAR); }
+    "="        { debug("EQ"); return symbol(sym.EQ); }
+    "="        { debug("EQ"); return symbol(sym.EQ); }
+    ";"        { debug("SEMI"); return symbol(sym.SEMI); }
 
-    {int}      { debug("NUMBER", yytext()); return symbol(sym.NUMBER, new Integer(yytext())); }
+    "bool"  { debug("BOOL"); return symbol (sym.BOOL);}
+    "int"      { debug("INT"); return symbol (sym.INT);}
+    "float"    { debug("FLOAT"); return symbol (sym.FLOAT);}
+    "char"     { debug("STRING"); return symbol (sym.CHAR);}
+
+
+    {int}      { debug("INTEGER", yytext()); return symbol(sym.INTEGER, new Integer(yytext())); }
+    {float}    { debug("FLOATING_POINT", yytext()); return symbol(sym.FLOATING_POINT, new Float(yytext()));}
+    {boolean}  { debug("BOOLEAN", yytext()); return symbol(sym.BOOLEAN, new Boolean(yytext()));}
+    {char}     { debug("CHAR", yytext()); return symbol(sym.CHAR, new String (yytext().substring(1,yylength()-1)));}
+
+    {id}       {
+                debug("id", yytext());
+                return symbol(sym.ID, yytext());
+               }
 
     
 

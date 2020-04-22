@@ -1,22 +1,55 @@
 /* ----------------------User code--------------------*/
 
 package src;
+
+parser code {:
+:};
    
 /* ------------Grammar symbol declarations----------- */
    
-terminal    PLUS, MINUS, TIMES, DIVIDE, LPAR, RPAR;
-terminal Integer    NUMBER;
-non terminal    program;
-non terminal Integer    expr, E, T, F;
+terminal    SEMI, PLUS, MINUS, TIMES, DIVIDE, LPAR, RPAR, EQ, INT, BOOL, CHAR, FLOAT;
+
+terminal Integer   INTEGER;
+terminal Boolean   BOOLEAN;
+terminal Float     FLOATING_POINT;
+terminal String    STRING;
+terminal String    ID;
+
+non terminal    program, declaration, statement;
+non terminal Integer    expr, E, T, F, type;
 
 /* Precedences */
+precedence left SEMI;
 precedence left PLUS, MINUS;
 precedence left TIMES;
    
 /* ------------Grammar rules----------- */
 
-program ::= E:e {: System.out.println("Evaluation result = " + e); :};
-   
+program ::= statement:s SEMI {: :};
+
+statement ::= statement:s1 SEMI statement:s2
+                {: :};
+
+statement ::= declaration:d {: :};
+
+
+declaration ::= type:t ID:i
+                {: System.out.println("Declaring variable " + i + " of type" + t);
+                Memory m = Memory.getInstance();
+                m.SymbolTable.put(i, t);
+                :};
+
+type ::= INT
+            {: RESULT = Type.INTEGER; :}
+        | FLOAT
+            {: RESULT = Type.FLOAT; :}
+        | CHAR
+            {: RESULT = Type.STRING; :}
+        | BOOL
+            {: RESULT = Type.BOOLEAN; :};
+
+statement ::= E:e {: System.out.println("Evaluation result = " + e); :};
+
 E    ::= E:e PLUS T:t
                 {: RESULT = e + t; :}
             | E:e MINUS T:t
@@ -33,6 +66,45 @@ T       ::= T:t TIMES F:f
 
 F       ::= LPAR E:e RPAR
                 {: RESULT = (e); :}
-            | NUMBER:n
+            | INTEGER:n
                 {: RESULT = n; :};
-           
+
+//program ::= declaration:d SEMI statement:s
+//                {: :};
+//
+//declaration ::= type:t ID:i
+//                {: System.out.println("Declaring variable " + i + " of type" + t);
+//                Memory m = Memory.getInstance();
+//                m.TypeTable.put(i, t);
+//                :};
+//
+//type ::= INT
+//            {: RESULT = Type.INTEGER; :}
+//        | FLOAT
+//            {: RESULT = Type.FLOAT; :}
+//        | CHAR
+//            {: RESULT = Type.STRING; :}
+//        | BOOL
+//            {: RESULT = Type.BOOLEAN; :};
+//
+//statement ::= E:e {: System.out.println("Evaluation result = " + e); :};
+//
+//E    ::= E:e PLUS T:t
+//                {: RESULT = e + t; :}
+//            | E:e MINUS T:t
+//                {: RESULT = e - t; :}
+//            | T:t
+//                {: RESULT = t; :};
+//
+//T       ::= T:t TIMES F:f
+//                {: RESULT = t * f; :}
+//            | T:t DIVIDE F:f
+//                {: RESULT = t / f; :}
+//            | F:f
+//                {: RESULT = f; :};
+//
+//F       ::= LPAR E:e RPAR
+//                {: RESULT = (e); :}
+//            | INTEGER:n
+//                {: RESULT = n; :};
+//

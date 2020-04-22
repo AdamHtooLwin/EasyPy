@@ -3,3 +3,4 @@
 /easypy/src/*.java
 /easypy/classes
 /easypy/dist/parser.jar
+/out

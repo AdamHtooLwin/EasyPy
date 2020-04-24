@@ -85,7 +85,7 @@ specials = [!|@|#|$|%|\^|&|*|(|)]*
 // Data types
 int = 0 | [1-9][0-9]*
 float = [0-9]+{dot}[0-9]+
-char   = \'{alphabet}{specials}{digit}\'
+char   = \"{alphabet}{specials}{digit}\"
 id = [A-Za-z_][A-Za-z_0-9]*
 
 boolean = true|false
@@ -109,16 +109,16 @@ boolean = true|false
     "="        { debug("EQ"); return symbol(sym.EQ); }
     ";"        { debug("SEMI"); return symbol(sym.SEMI); }
 
-    "bool"  { debug("BOOL"); return symbol (sym.BOOL);}
+    "bool"     { debug("BOOL"); return symbol (sym.BOOL);}
     "int"      { debug("INT"); return symbol (sym.INT);}
     "float"    { debug("FLOAT"); return symbol (sym.FLOAT);}
     "char"     { debug("STRING"); return symbol (sym.CHAR);}
 
 
-    {int}      { debug("INTEGER", yytext()); return symbol(sym.INTEGER, new Integer(yytext())); }
-    {float}    { debug("FLOATING_POINT", yytext()); return symbol(sym.FLOATING_POINT, new Float(yytext()));}
-    {boolean}  { debug("BOOLEAN", yytext()); return symbol(sym.BOOLEAN, new Boolean(yytext()));}
-    {char}     { debug("CHAR", yytext()); return symbol(sym.CHAR, new String (yytext().substring(1,yylength()-1)));}
+    {int}      { debug("INTEGER_LITERAL", yytext()); return symbol(sym.INTEGER_LITERAL, new Integer(yytext())); }
+    {float}    { debug("FLOATING_POINT_LITERAL", yytext()); return symbol(sym.FLOATING_LITERAL, new Float(yytext()));}
+    {boolean}  { debug("BOOLEAN_LITERAL", yytext()); return symbol(sym.BOOLEAN_LITERAL, new Boolean(yytext()));}
+    {char}     { debug("CHAR_LITERAL", yytext()); return symbol(sym.CHAR_LITERAL, new String (yytext().substring(1,yylength()-1)));}
 
     {id}       {
                 debug("id", yytext());

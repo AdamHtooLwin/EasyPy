@@ -1,1 +1,1 @@
-int x; bool y; char z;
+int x; char y; bool z; x = 1; z = true; y = "Hello"

@@ -9,14 +9,15 @@ parser code {:
    
 terminal    SEMI, PLUS, MINUS, TIMES, DIVIDE, LPAR, RPAR, EQ, INT, BOOL, CHAR, FLOAT;
 
-terminal Integer   INTEGER;
-terminal Boolean   BOOLEAN;
-terminal Float     FLOATING_POINT;
-terminal String    STRING;
+terminal Integer   INTEGER_LITERAL;
+terminal Boolean   BOOLEAN_LITERAL;
+terminal Float     FLOATING_LITERAL;
+terminal String    CHAR_LITERAL;
 terminal String    ID;
 
-non terminal    program, declaration, statement;
-non terminal Integer    expr, E, T, F, type;
+non terminal    program, declaration, statement, assignment_sequence, assignment;
+non terminal Integer    expr, E, T, F;
+non terminal String type;
 
 /* Precedences */
 precedence left SEMI;
@@ -25,13 +26,47 @@ precedence left TIMES;
    
 /* ------------Grammar rules----------- */
 
-program ::= statement:s SEMI {: :};
-
-statement ::= statement:s1 SEMI statement:s2
+program ::= declaration:d SEMI statement:s
                 {: :};
 
-statement ::= declaration:d {: :};
+statement ::= declaration:d SEMI statement:s
+                {: :}
+              | {: :};
 
+statement ::= assignment_sequence:as SEMI statement:s
+                {: :};
+
+assignment_sequence ::= ID:i EQ E:e
+                {:
+
+                System.out.println("Assigning variable " + i + " with value" + e);
+                Memory m = Memory.getInstance();
+                String var_type = m.SymbolTable.get(i);
+                if (var_type == null){
+                    System.out.println("Variable " + i + " not initialized!");
+                    System.exit(1);
+                }
+                else {
+                    switch(var_type){
+                        case "int":
+                            System.out.println("Storing int in ValueTable");
+                            m.ValueTable.put(i, e);
+                            break;
+                        case "float":
+                            System.out.println("Storing float in ValueTable");
+                            m.ValueTable.put(i, e);
+                            break;
+                        case "char":
+                            System.out.println("Storing char in ValueTable");
+                            m.ValueTable.put(i, e);
+                            break;
+                        case "bool":
+                            System.out.println("Storing bool in ValueTable");
+                            m.ValueTable.put(i, e);
+                            break;
+                    }
+                }
+                :};
 
 declaration ::= type:t ID:i
                 {: System.out.println("Declaring variable " + i + " of type" + t);
@@ -40,15 +75,13 @@ declaration ::= type:t ID:i
                 :};
 
 type ::= INT
-            {: RESULT = Type.INTEGER; :}
+            {: RESULT = "int"; :}
         | FLOAT
-            {: RESULT = Type.FLOAT; :}
+            {: RESULT = "float"; :}
         | CHAR
-            {: RESULT = Type.STRING; :}
+            {: RESULT = "char"; :}
         | BOOL
-            {: RESULT = Type.BOOLEAN; :};
-
-statement ::= E:e {: System.out.println("Evaluation result = " + e); :};
+            {: RESULT = "bool"; :};
 
 E    ::= E:e PLUS T:t
                 {: RESULT = e + t; :}
@@ -66,45 +99,6 @@ T       ::= T:t TIMES F:f
 
 F       ::= LPAR E:e RPAR
                 {: RESULT = (e); :}
-            | INTEGER:n
+            | INTEGER_LITERAL:n
                 {: RESULT = n; :};
 
-//program ::= declaration:d SEMI statement:s
-//                {: :};
-//
-//declaration ::= type:t ID:i
-//                {: System.out.println("Declaring variable " + i + " of type" + t);
-//                Memory m = Memory.getInstance();
-//                m.TypeTable.put(i, t);
-//                :};
-//
-//type ::= INT
-//            {: RESULT = Type.INTEGER; :}
-//        | FLOAT
-//            {: RESULT = Type.FLOAT; :}
-//        | CHAR
-//            {: RESULT = Type.STRING; :}
-//        | BOOL
-//            {: RESULT = Type.BOOLEAN; :};
-//
-//statement ::= E:e {: System.out.println("Evaluation result = " + e); :};
-//
-//E    ::= E:e PLUS T:t
-//                {: RESULT = e + t; :}
-//            | E:e MINUS T:t
-//                {: RESULT = e - t; :}
-//            | T:t
-//                {: RESULT = t; :};
-//
-//T       ::= T:t TIMES F:f
-//                {: RESULT = t * f; :}
-//            | T:t DIVIDE F:f
-//                {: RESULT = t / f; :}
-//            | F:f
-//                {: RESULT = f; :};
-//
-//F       ::= LPAR E:e RPAR
-//                {: RESULT = (e); :}
-//            | INTEGER:n
-//                {: RESULT = n; :};
-//

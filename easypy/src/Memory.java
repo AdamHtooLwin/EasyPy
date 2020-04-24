@@ -1,11 +1,18 @@
 package src;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.util.HashMap; // import the HashMap class
 
 public class Memory {
+
     private static volatile Memory instance = null;
-    //    {"x":15,"y":Null}
-    HashMap<String, Integer> ValueTable = new HashMap<String, Integer>();
-    HashMap<String, Integer> SymbolTable = new HashMap<String, Integer>();
+    // make separate hashmaps for each data type?
+    HashMap<String, Object> ValueTable = new HashMap<String, Object>();
+    HashMap<String, String> SymbolTable = new HashMap<String, String>();
+
+    // TODO
+    // Combine valuetable and symbolTable
+    // HashMap<String, Hashmap<String, Object>> SymbolTable = new HashMap<String, Integer>();
 
     private Memory(){}
 
@@ -24,12 +31,24 @@ public class Memory {
         ValueTable.put(varName, null);
     }
 
-    public void assignValueToVariable(String varName, Integer value){
+    public void assignInteger(String varName, Integer value){
         ValueTable.put(varName, value);
+        //switch case or if to check for type from params
     }
 
-    public Integer getValueFromVariable(String varName){
-        return ValueTable.get(varName);
+    public void assignFloat(String varName, Float value){
+        ValueTable.put(varName, value);
+        //switch case or if to check for type from params
+    }
+
+    public void assignBoolean(String varName, Boolean value){
+        ValueTable.put(varName, value);
+        //switch case or if to check for type from params
+    }
+
+    public void assignString(String varName, String value){
+        ValueTable.put(varName, value);
+        //switch case or if to check for type from params
     }
 
     public void memory_dump(){

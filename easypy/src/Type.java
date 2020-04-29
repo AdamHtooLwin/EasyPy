@@ -14,7 +14,6 @@ public class Type {
     public static final int FLOAT = 3;
     public static final int STRING = 4;
 
-    static HashMap<Integer, Type> types = new HashMap<Integer, Type>();
     int tag;
     String code;
 
@@ -23,11 +22,12 @@ public class Type {
         code = c;
     }
 
-    public Type() {
-        types.put(INTEGER, new Type(INTEGER, "int"));
-        types.put(BOOLEAN, new Type(BOOLEAN, "bool"));
-        types.put(FLOAT, new Type(FLOAT, "float"));
-        types.put(STRING, new Type(STRING, "char"));
+    public int getTag() {
+        return tag;
+    }
+
+    public String getCode() {
+        return code;
     }
 
 }

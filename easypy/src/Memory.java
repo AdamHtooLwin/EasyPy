@@ -2,13 +2,14 @@ package src;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.util.HashMap; // import the HashMap class
+import java.util.Map;
 
 public class Memory {
 
     private static volatile Memory instance = null;
     // make separate hashmaps for each data type?
     HashMap<String, Object> ValueTable = new HashMap<String, Object>();
-    HashMap<String, String> SymbolTable = new HashMap<String, String>();
+    HashMap<String, Type> SymbolTable = new HashMap<String, Type>();
 
     // TODO
     // Combine valuetable and symbolTable
@@ -53,6 +54,11 @@ public class Memory {
 
     public void memory_dump(){
         System.out.println("Value Table: " + ValueTable);
-        System.out.println("Symbol Table: " + SymbolTable);
+//        System.out.println("Symbol Table: " + SymbolTable);
+        System.out.print("Symbol Table: {");
+        for (Map.Entry<String, Type> entry : SymbolTable.entrySet()) {
+            System.out.print(entry.getKey() + ":" + entry.getValue().getCode() + " ");
+        }
+        System.out.print("}");
     }
 }

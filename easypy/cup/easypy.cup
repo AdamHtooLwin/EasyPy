@@ -89,7 +89,7 @@ E    ::= E:e PLUS T:t
                 }
                 else if (e.getType().tag == Type.STRING && t.getType().tag == Type.STRING){
                     String evaluation = (String) e.getValue() + (String) t.getValue();
-                    RESULT = new Entity((Object) evaluation, new Type(Type.FLOAT, "float"));
+                    RESULT = new Entity((Object) evaluation, new Type(Type.STRING, "char"));
                 }
                 else {
                     parser.type_error("+", "Invalid operation for types " + e.getType().code + " and " + t.getType().code);

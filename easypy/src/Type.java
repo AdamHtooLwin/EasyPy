@@ -36,7 +36,7 @@ public class Type {
         types.put(INTEGER , new Type(INTEGER, "int"));
         types.put(BOOLEAN, new Type(BOOLEAN, "bool"));
         types.put(FLOAT, new Type(FLOAT, "float"));
-        types.put(STRING, new Type(STRING, "String"));
+        types.put(STRING, new Type(STRING, "char"));
         types.put(ERRORTYPE, new Type(ERRORTYPE, "error"));
     }
 

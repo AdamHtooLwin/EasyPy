@@ -1,5 +1,5 @@
 package src;
-public class Aexp
+public class Expression
 {
     Memory m = Memory.getInstance();
     private src.parser parser = new parser();
@@ -11,12 +11,12 @@ public class Aexp
     private Args Operands;
     private int Operator;
     private Boolean BOL;
-    //type is determined from the constructor
+
     private Type type = new Type();
     //A variable to check if identifier hold boolean or not. If false, its integer.
     private boolean isBool;
 
-    Aexp(Integer x)
+    Expression(Integer x)
     {
         int i;
         for (i = 0; i <= 5; i++)
@@ -35,7 +35,7 @@ public class Aexp
         isBool = false;
     }
     
-    Aexp(Float x)
+    Expression(Float x)
     {
         int i;
         for (i = 0; i <= 5; i++)
@@ -55,7 +55,7 @@ public class Aexp
     }
 
      
-    Aexp(String x)
+    Expression(String x)
     {
           int i;
         for (i = 0; i <= 5; i++)
@@ -74,7 +74,7 @@ public class Aexp
         isBool = false;        
     }
     
-    Aexp(String x, Boolean identifier)
+    Expression(String x, Boolean identifier)
     {
         
         int i;
@@ -118,7 +118,7 @@ public class Aexp
         ID = x;
     }
 
-    Aexp(Args x, int op)
+    Expression(Args x, int op)
     {
         int i;
         for (i = 0; i <= 5; i++)
@@ -136,16 +136,16 @@ public class Aexp
         if (op == sym.PLUS || op == sym.MINUS || op == sym.TIMES || op == sym.DIVIDE || op == sym.MOD)
         {
             
-             if (x.getse().getType().isFloating_point()){
+             if (x.getRight().getType().isFloating_point()){
                 type = Type.floating_point();
-            } else if (x.getse().getType().isInteger() ){
+            } else if (x.getRight().getType().isInteger() ){
                 type = Type.integer();
-            }else if (x.getse().getType().isString()){
+            }else if (x.getRight().getType().isString()){
                 type = Type.string();
             }             
               
             isBool = false;
-        } else if (op == sym.GT || op == sym.LT || op == sym.EQUAL || op == sym.GTE || op == sym.LTE)
+        } else if (op == sym.GT || op == sym.LT || op == sym.EQUAL || op == sym.NOTEQUAL || op == sym.GTE || op == sym.LTE)
         {
             type = Type.bool();
             isBool = true;
@@ -163,7 +163,7 @@ public class Aexp
         Operator = op;
     }
 
-    Aexp(Boolean mutex)
+    Expression(Boolean mutex)
     {
         int i;
         for (i = 0; i <= 5; i++)
@@ -204,22 +204,22 @@ public class Aexp
         {
             if (Operator == sym.PLUS)
             {
-                s = "PLUS(" + Operands.getfi().getexp() + "," + Operands.getse().getexp() + ")";
+                s = "PLUS(" + Operands.getLeft().getexp() + "," + Operands.getRight().getexp() + ")";
             } else if (Operator == sym.MINUS)
             {
-                s = "MINUS(" + Operands.getfi().getexp() + "," + Operands.getse().getexp() + ")";
+                s = "MINUS(" + Operands.getLeft().getexp() + "," + Operands.getRight().getexp() + ")";
             }
             if (Operator == sym.TIMES)
             {
-                s = "TIMES(" + Operands.getfi().getexp() + "," + Operands.getse().getexp() + ")";
+                s = "TIMES(" + Operands.getLeft().getexp() + "," + Operands.getRight().getexp() + ")";
             }
             if (Operator == sym.DIVIDE)
             {
-                s = "DIVIDE(" + Operands.getfi().getexp() + "," + Operands.getse().getexp() + ")";
+                s = "DIVIDE(" + Operands.getLeft().getexp() + "," + Operands.getRight().getexp() + ")";
             }
             if (Operator == sym.MOD)
             {
-                s = "MOD(" + Operands.getfi().getexp() + "," + Operands.getse().getexp() + ")";
+                s = "MOD(" + Operands.getLeft().getexp() + "," + Operands.getRight().getexp() + ")";
             }
         } else if (tag[5])
         {
@@ -264,53 +264,53 @@ public class Aexp
                 if (Operator == sym.PLUS)
                 {
                   
-                    if ( Operands.getfi().getType().isInteger() )
+                    if ( Operands.getLeft().getType().isInteger() )
                     {
-                        int val = (Integer) Operands.getfi().getEntity().getValue();
-                        val = val + (Integer) Operands.getse().getEntity().getValue();
+                        int val = (Integer) Operands.getLeft().getEntity().getValue();
+                        val = val + (Integer) Operands.getRight().getEntity().getValue();
                         typeVal = new Entity(val, Type.integer());
 
-                    } else if ( Operands.getfi().getType().isFloating_point())
+                    } else if ( Operands.getLeft().getType().isFloating_point())
                     {
-                        float val = (Float) Operands.getfi().getEntity().getValue();
-                        val = val + (Float) Operands.getse().getEntity().getValue();
+                        float val = (Float) Operands.getLeft().getEntity().getValue();
+                        val = val + (Float) Operands.getRight().getEntity().getValue();
                         typeVal = new Entity(val, Type.floating_point());
                     }
-                    else if (Operands.getfi().getType().isString() && Operands.getse().getType().isString())
+                    else if (Operands.getLeft().getType().isString() && Operands.getRight().getType().isString())
                     {
-                        String val = (String) Operands.getfi().getEntity().getValue();
-                        val = val + (String) Operands.getse().getEntity().getValue();
+                        String val = (String) Operands.getLeft().getEntity().getValue();
+                        val = val + (String) Operands.getRight().getEntity().getValue();
                         typeVal = new Entity(val, Type.string());
                     }
                     else {
-                        System.out.println("Invalid operation for types " + Operands.getfi().getEntity().getType().code + " and " + Operands.getse().getEntity().getType().code);
+                        System.out.println("Invalid operation for types " + Operands.getLeft().getEntity().getType().code + " and " + Operands.getRight().getEntity().getType().code);
                         System.exit(1);
                     }
                 }
                 else if (Operator == sym.MINUS)
                 {
-                    if ( Operands.getfi().getType().isInteger() )
+                    if ( Operands.getLeft().getType().isInteger() )
                     {
-                        int val = (Integer) Operands.getfi().getEntity().getValue();
-                        val = val - (Integer)Operands.getse().getEntity().getValue();
+                        int val = (Integer) Operands.getLeft().getEntity().getValue();
+                        val = val - (Integer)Operands.getRight().getEntity().getValue();
                         typeVal = new Entity(val, Type.integer());
-                    } else if ( Operands.getfi().getType().isFloating_point()){
-                        float val = (Float) Operands.getfi().getEntity().getValue();
-                        val = val - (Float)Operands.getse().getEntity().getValue();
+                    } else if ( Operands.getLeft().getType().isFloating_point()){
+                        float val = (Float) Operands.getLeft().getEntity().getValue();
+                        val = val - (Float)Operands.getRight().getEntity().getValue();
                         typeVal = new Entity(val, Type.floating_point());
                     }
                         
                 }
                 else if (Operator == sym.TIMES)
                 {
-                    if ( Operands.getfi().getType().isInteger() )
+                    if ( Operands.getLeft().getType().isInteger() )
                     {
-                        int val = (Integer) Operands.getfi().getEntity().getValue();
-                        val = val * (Integer)Operands.getse().getEntity().getValue();
+                        int val = (Integer) Operands.getLeft().getEntity().getValue();
+                        val = val * (Integer)Operands.getRight().getEntity().getValue();
                         typeVal = new Entity(val, Type.integer());
-                    } else if ( Operands.getfi().getType().isFloating_point()){
-                        float val = (Float) Operands.getfi().getEntity().getValue();
-                        val = val * (Float)Operands.getse().getEntity().getValue();
+                    } else if ( Operands.getLeft().getType().isFloating_point()){
+                        float val = (Float) Operands.getLeft().getEntity().getValue();
+                        val = val * (Float)Operands.getRight().getEntity().getValue();
                         typeVal = new Entity(val, Type.floating_point());
                     }
                 }
@@ -318,131 +318,131 @@ public class Aexp
                 {
                    
                     
-                    if ( Operands.getfi().getType().isInteger() )
+                    if ( Operands.getLeft().getType().isInteger() )
                     {
-                        int val = (Integer) Operands.getfi().getEntity().getValue();
-                        val = val / (Integer)Operands.getse().getEntity().getValue();
+                        int val = (Integer) Operands.getLeft().getEntity().getValue();
+                        val = val / (Integer)Operands.getRight().getEntity().getValue();
                         typeVal = new Entity(val, Type.integer());
                         
-                    } else if ( Operands.getfi().getType().isFloating_point())
+                    } else if ( Operands.getLeft().getType().isFloating_point())
                     {
-                        float val = (Float) Operands.getfi().getEntity().getValue();
-                        val = val / (Float)Operands.getse().getEntity().getValue();
+                        float val = (Float) Operands.getLeft().getEntity().getValue();
+                        val = val / (Float)Operands.getRight().getEntity().getValue();
                         typeVal = new Entity(val, Type.floating_point());
                     }
                 }
                 else if (Operator == sym.MOD)
                 {                    
-                    if ( Operands.getfi().getType().isInteger() )
+                    if ( Operands.getLeft().getType().isInteger() )
                     {
-                        int val = (Integer) Operands.getfi().getEntity().getValue();
-                        val = val % (Integer)Operands.getse().getEntity().getValue();
+                        int val = (Integer) Operands.getLeft().getEntity().getValue();
+                        val = val % (Integer)Operands.getRight().getEntity().getValue();
                         typeVal = new Entity(val, Type.integer());
                         
-                    } else if ( Operands.getfi().getType().isFloating_point())
+                    } else if ( Operands.getLeft().getType().isFloating_point())
                     {
-                        float val = (Float) Operands.getfi().getEntity().getValue();
-                        val = val % (Float)Operands.getse().getEntity().getValue();
+                        float val = (Float) Operands.getLeft().getEntity().getValue();
+                        val = val % (Float)Operands.getRight().getEntity().getValue();
                         typeVal = new Entity(val, Type.floating_point());
                     }
                 }
                 else if (Operator == sym.GT)
                 {
                    
-                     if ( Operands.getfi().getType().isInteger() )
+                     if ( Operands.getLeft().getType().isInteger() )
                     {
-                         boolean val = (Integer) Operands.getfi().getEntity().getValue() > (Integer)Operands.getse().getEntity().getValue();
-                         typeVal = new Entity(val, Type.integer());
+                         boolean val = (Integer) Operands.getLeft().getEntity().getValue() > (Integer)Operands.getRight().getEntity().getValue();
+                         typeVal = new Entity(val, Type.bool());
                         
-                    } else if ( Operands.getfi().getType().isFloating_point())
+                    } else if ( Operands.getLeft().getType().isFloating_point())
                     {
-                        boolean val = (Float) Operands.getfi().getEntity().getValue() > (Float)Operands.getse().getEntity().getValue();
-                        typeVal = new Entity(val, Type.floating_point());
+                        boolean val = (Float) Operands.getLeft().getEntity().getValue() > (Float)Operands.getRight().getEntity().getValue();
+                        typeVal = new Entity(val, Type.bool());
                     }
                 }
                 else if (Operator == sym.LT)
                 {
-                    if ( Operands.getfi().getType().isInteger() )
+                    if ( Operands.getLeft().getType().isInteger() )
                     {
-                         boolean val = (Integer) Operands.getfi().getEntity().getValue() < (Integer)Operands.getse().getEntity().getValue();
-                         typeVal = new Entity(val, Type.integer());
+                         boolean val = (Integer) Operands.getLeft().getEntity().getValue() < (Integer) Operands.getRight().getEntity().getValue();
+                         typeVal = new Entity(val, Type.bool());
                         
-                    } else if ( Operands.getfi().getType().isFloating_point())
+                    } else if ( Operands.getLeft().getType().isFloating_point())
                     {
-                        boolean val = (Float) Operands.getfi().getEntity().getValue() < (Float)Operands.getse().getEntity().getValue();
-                        typeVal = new Entity(val, Type.floating_point());
+                        boolean val = (Float) Operands.getLeft().getEntity().getValue() < (Float)Operands.getRight().getEntity().getValue();
+                        typeVal = new Entity(val, Type.bool());
                     }
                 }
                 else if (Operator == sym.GTE)
                 {
-                    if ( Operands.getfi().getType().isInteger() )
+                    if ( Operands.getLeft().getType().isInteger() )
                     {
-                         boolean val = (Integer) Operands.getfi().getEntity().getValue() >= (Integer)Operands.getse().getEntity().getValue();
-                         typeVal = new Entity(val, Type.integer());
+                         boolean val = (Integer) Operands.getLeft().getEntity().getValue() >= (Integer)Operands.getRight().getEntity().getValue();
+                         typeVal = new Entity(val, Type.bool());
                         
-                    } else if ( Operands.getfi().getType().isFloating_point())
+                    } else if ( Operands.getLeft().getType().isFloating_point())
                     {
-                        boolean val = (Float) Operands.getfi().getEntity().getValue() >= (Float)Operands.getse().getEntity().getValue();
-                        typeVal = new Entity(val, Type.floating_point());
+                        boolean val = (Float) Operands.getLeft().getEntity().getValue() >= (Float)Operands.getRight().getEntity().getValue();
+                        typeVal = new Entity(val, Type.bool());
                     }
                 }
                 else if (Operator == sym.LTE)
                 {
-                    if ( Operands.getfi().getType().isInteger() )
+                    if ( Operands.getLeft().getType().isInteger() )
                     {
-                         boolean val = (Integer) Operands.getfi().getEntity().getValue() <= (Integer)Operands.getse().getEntity().getValue();
-                         typeVal = new Entity(val, Type.integer());
+                         boolean val = (Integer) Operands.getLeft().getEntity().getValue() <= (Integer)Operands.getRight().getEntity().getValue();
+                         typeVal = new Entity(val, Type.bool());
                         
-                    } else if ( Operands.getfi().getType().isFloating_point())
+                    } else if ( Operands.getLeft().getType().isFloating_point())
                     {
-                        boolean val = (Float) Operands.getfi().getEntity().getValue() <= (Float)Operands.getse().getEntity().getValue();
-                        typeVal = new Entity(val, Type.floating_point());
+                        boolean val = (Float) Operands.getLeft().getEntity().getValue() <= (Float)Operands.getRight().getEntity().getValue();
+                        typeVal = new Entity(val, Type.bool());
                     }
                 }
                 else if (Operator == sym.EQUAL)
                 {
-                    if ( Operands.getfi().getType().isInteger() )
+                    if ( Operands.getLeft().getType().isInteger() )
                     {
-                         boolean val = (Integer) Operands.getfi().getEntity().getValue() == (Integer)Operands.getse().getEntity().getValue();
-                         typeVal = new Entity(val, Type.floating_point());
+                         boolean val = ((Integer) Operands.getLeft().getEntity().getValue()).equals((Integer) Operands.getRight().getEntity().getValue());
+                         typeVal = new Entity(val, Type.bool());
 
-                    } else if ( Operands.getfi().getType().isFloating_point())
+                    } else if ( Operands.getLeft().getType().isFloating_point())
                     {
-                        boolean val = (Float) Operands.getfi().getEntity().getValue() == (Float)Operands.getse().getEntity().getValue();
-                        typeVal = new Entity(val, Type.integer());
+                        boolean val = ((Float) Operands.getLeft().getEntity().getValue()).equals((Float) Operands.getRight().getEntity().getValue());
+                        typeVal = new Entity(val, Type.bool());
                         
-                    }else if ( Operands.getfi().getType().isBool())
+                    } else if ( Operands.getLeft().getType().isBool())
                     {
-                        boolean val = (Boolean) Operands.getfi().getEntity().getValue() == (Boolean)Operands.getse().getEntity().getValue();
+                        boolean val = (Boolean) Operands.getLeft().getEntity().getValue().equals((Boolean)Operands.getRight().getEntity().getValue());
                         typeVal = new Entity(val, Type.bool());
                     }
                 }
                 else if (Operator == sym.NOTEQUAL)
                 {
-                    if ( Operands.getfi().getType().isInteger() )
+                    if (Operands.getLeft().getType().isInteger() )
                     {
-                         boolean val = (Integer) Operands.getfi().getEntity().getValue() != (Integer)Operands.getse().getEntity().getValue();
-                         typeVal = new Entity(val, Type.integer());
+                         boolean val = !((Integer) Operands.getLeft().getEntity().getValue()).equals((Integer) Operands.getRight().getEntity().getValue());
+                         typeVal = new Entity(val, Type.bool());
                         
-                    } else if ( Operands.getfi().getType().isFloating_point())
+                    } else if (Operands.getLeft().getType().isFloating_point())
                     {
-                        boolean val = (Float) Operands.getfi().getEntity().getValue() != (Float)Operands.getse().getEntity().getValue();
-                        typeVal = new Entity(val, Type.floating_point());
+                        boolean val = !((Float) Operands.getLeft().getEntity().getValue()).equals((Float) Operands.getRight().getEntity().getValue());
+                        typeVal = new Entity(val, Type.bool());
                         
-                    }else if ( Operands.getfi().getType().isBool())
+                    }else if (Operands.getLeft().getType().isBool())
                     {
-                        boolean val = (Boolean) Operands.getfi().getEntity().getValue() != (Boolean)Operands.getse().getEntity().getValue();
+                        boolean val = (Boolean) Operands.getLeft().getEntity().getValue() != (Boolean)Operands.getRight().getEntity().getValue();
                         typeVal = new Entity(val, Type.bool());
                     }
                 }
                 else if (Operator == sym.OR)
                 {
-                    boolean val = (Boolean) Operands.getfi().getEntity().getValue() || (Boolean) Operands.getse().getEntity().getValue();
+                    boolean val = (Boolean) Operands.getLeft().getEntity().getValue() || (Boolean) Operands.getRight().getEntity().getValue();
                     typeVal = new Entity(val, Type.bool());
                 }
                 else if (Operator == sym.AND)
                 {
-                    boolean val = (Boolean) Operands.getfi().getEntity().getValue() && (Boolean) Operands.getse().getEntity().getValue();
+                    boolean val = (Boolean) Operands.getLeft().getEntity().getValue() && (Boolean) Operands.getRight().getEntity().getValue();
                     typeVal = new Entity(val, Type.bool());
                 }
         }

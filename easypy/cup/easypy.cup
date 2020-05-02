@@ -20,8 +20,8 @@ parser code {:
 /* ------------Grammar symbol declarations----------- */
    
 terminal    COMMA, SEMI, EQ, PUBLISH;
-terminal    PLUS, MINUS, TIMES, DIVIDE, MOD, LPAR, RPAR;
-terminal    LT, GT, LTE, GTE, EQUAL, NOTEQUAL, OR, AND;
+terminal    PLUS, MINUS, TIMES, DIVIDE, MOD, LPAR, RPAR, LCURL, RCURL;
+terminal    WHILE, DO, IF, ELSE, LT, GT, LTE, GTE, EQUAL, NOTEQUAL, OR, AND;
 terminal    INT, BOOL, CHAR, FLOAT;
 
 terminal Integer   INTEGER_LITERAL;
@@ -33,9 +33,9 @@ terminal String    ID;
 non terminal                    program, declaration, declaration_list;
 non terminal Type               type;
 
-non terminal Astat              statement, assignment, ifthen, publish, while, until_st;
-non terminal Lstat              statement_list;
-non terminal Aexp               E, T, F, logic;
+non terminal Statement              statement, assignment, ifthen, publish, while, until_st;
+non terminal StatementList              statement_list;
+non terminal Expression               E, T, F, L;
 non terminal ArrayList<String>  id_list;
 
 /* Precedences */
@@ -45,7 +45,7 @@ precedence left TIMES;
    
 /* ------------Grammar rules----------- */
 
-program ::= declaration_list:d SEMI statement_list:sl SEMI
+program ::= declaration_list:d SEMI statement_list:sl
                 {: sl.execute(); :};
 
 declaration_list ::= declaration_list:dl SEMI declaration:d | declaration:d;
@@ -85,14 +85,52 @@ type ::= INT
         | BOOL
             {: RESULT = new Type(Type.BOOLEAN, "bool"); :};
 
-statement_list ::= statement_list:sl SEMI statement:s
-                {: RESULT = new Lstat(sl, s); :}
-              | statement:s {: RESULT = new Lstat(s); :};
+statement_list ::= statement_list:sl statement:s
+                {: RESULT = new StatementList(sl, s); :}
+              | statement:s {: RESULT = new StatementList(s); :};
 
-statement ::= assignment:as
+statement ::= assignment:as SEMI
                 {: RESULT = as; :}
-                | publish:p
-                {: RESULT = p; :};
+                | publish:p SEMI
+                {: RESULT = p; :}
+                | ifthen:ift
+                {: RESULT = ift; :}
+                | while:w
+                {: RESULT = w; :}
+                ;
+
+while ::= WHILE LPAR L:l RPAR LCURL statement:s RCURL
+                {:
+                if((Boolean) l.getType().isBool()){
+                    RESULT = Statement.whileloop(l, s);
+                }
+                else {
+                     parser.type_error("l", " : expression in the while condition must be boolean.");
+                }
+                :}
+                ;
+
+ifthen ::=  IF LPAR L:l RPAR LCURL statement:s RCURL
+            {:
+                if((Boolean) l.getType().isBool()){
+                    RESULT = Statement.ifthen(l, s);
+                }
+                else {
+                     parser.type_error("l", " : expression in the if condition must be boolean.");
+                }
+
+            :}
+          |
+            IF LPAR L:l RPAR LCURL statement:s1 RCURL ELSE LCURL statement:s2 RCURL
+            {:
+//                System.out.println(l.getType().code);
+                if((Boolean) l.getType().isBool()){
+                    RESULT = Statement.ifthenelse(l, s1, s2);
+                }
+                else {
+                     parser.type_error("l", " : expression in the if condition must be boolean.");
+                }
+             :};
 
 assignment ::= ID:i EQ E:e
                 {:
@@ -102,7 +140,7 @@ assignment ::= ID:i EQ E:e
                 }
                 else {
                     if (m.SymbolTable.get(i).tag == e.getType().tag){
-                         RESULT = Astat.assignment(i,e);
+                         RESULT = Statement.assignment(i,e);
                     }
                     else {
                         parser.type_error("e", " : expression in the assignment statement must have the type " + m.SymbolTable.get(i).code);
@@ -111,26 +149,26 @@ assignment ::= ID:i EQ E:e
                 :};
 
 publish  ::= PUBLISH LPAR E:e RPAR
-                {: RESULT = Astat.print(e); :};
+                {: RESULT = Statement.print(e); :};
 
 E    ::= E:e PLUS T:t
                 {:
-                RESULT = new Aexp(new Args(e,t), sym.PLUS);
+                RESULT = new Expression(new Args(e,t), sym.PLUS);
                 :}
             | E:e MINUS T:t
                 {:
-                RESULT = new Aexp(new Args(e,t), sym.MINUS);
+                RESULT = new Expression(new Args(e,t), sym.MINUS);
                 :}
             | T:t
                 {: RESULT = t; :};
 
 T       ::= T:t TIMES F:f
                 {:
-                RESULT = new Aexp(new Args(t,f), sym.TIMES);
+                RESULT = new Expression(new Args(t,f), sym.TIMES);
                 :}
             | T:t DIVIDE F:f
                 {:
-                RESULT = new Aexp(new Args(t,f), sym.DIVIDE);
+                RESULT = new Expression(new Args(t,f), sym.DIVIDE);
                 :}
             | F:f
                 {:
@@ -143,24 +181,48 @@ F       ::= LPAR E:e RPAR
                 :}
             | INTEGER_LITERAL:n
                 {:
-                RESULT = new Aexp(n);
+                RESULT = new Expression(n);
                 :}
             | BOOLEAN_LITERAL:b
                 {:
-                RESULT = new Aexp(b);
+                RESULT = new Expression(b);
                 :}
             | FLOATING_LITERAL:f
                 {:
-                RESULT = new Aexp(f);
+                RESULT = new Expression(f);
                 :}
             | CHAR_LITERAL:c
                 {:
-                RESULT = new Aexp(c);
+                RESULT = new Expression(c);
                 :}
             | ID:i
                 {:
-                RESULT = new Aexp(i, true);
+                RESULT = new Expression(i, true);
                 :}
             ;
+
+L ::= E:e1 AND E:e2
+          {:RESULT = new Expression(new Args(e1, e2), sym.AND);:}
+          |
+          E:e1 OR E:e2
+          {:RESULT = new Expression(new Args(e1, e2), sym.OR);:}
+          |
+          E:e1 LT E:e2
+          {:RESULT = new Expression(new Args(e1, e2), sym.LT);:}
+          |
+          E:e1 GT E:e2
+          {:RESULT = new Expression(new Args(e1, e2), sym.GT);:}
+          |
+          E:e1 GTE E:e2
+          {:RESULT = new Expression(new Args(e1, e2), sym.GTE);:}
+          |
+          E:e1 LTE E:e2
+          {:RESULT = new Expression(new Args(e1, e2), sym.LTE);:}
+          |
+          E:e1 EQUAL E:e2
+          {:RESULT = new Expression(new Args(e1, e2), sym.EQUAL);:}
+          |
+          E:e1 NOTEQUAL E:e2
+          {:RESULT = new Expression(new Args(e1, e2), sym.NOTEQUAL);:};
 
 

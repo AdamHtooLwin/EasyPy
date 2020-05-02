@@ -3,21 +3,22 @@ package src;
 import java.util.ArrayList;
 
 
-public class Lstat {
+public class StatementList {
 
     ArrayList<Statement> statementLists;
 
-    public Lstat(Statement s){
+    public StatementList(Statement s){
         statementLists  = new ArrayList<Statement>();
         statementLists.add(s);
     }
 
-    public Lstat(Lstat l, Statement s){
+    public StatementList(StatementList l, Statement s){
         statementLists = l.statementLists;
         statementLists.add(s);
     }
 
     public void execute(){
+        System.out.println("");
         System.out.println("\n===========PROGRAM OUTPUT===========");
 
         for (Statement statement : statementLists) {

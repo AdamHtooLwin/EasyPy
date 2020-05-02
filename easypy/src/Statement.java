@@ -1,6 +1,6 @@
 package src;
 
-public class Astat
+public class Statement
 {
     Memory m = Memory.getInstance();
     src.parser parser = new parser();
@@ -8,9 +8,9 @@ public class Astat
     String ID;
     Type type;
     Expression e;
-    Astat body;
-    Astat elsebody;
-    Lstat statementList;
+    Statement body;
+    Statement elsebody;
+    StatementList statementList;
     int calculatorResult;
     float calculatorFloatResult;
     String ID2;
@@ -19,49 +19,49 @@ public class Astat
     Expression left,right;
     
 
-    public Astat(Type t, String ID, Expression e)
+    public Statement(Type t, String ID, Expression e)
     {
         this.ID = ID;
         this.e = e;
         this.type = t;
     }
     
-    public Astat(Type t, String ID)
+    public Statement(Type t, String ID)
     {
         this.ID = ID;
         this.e = null;
         this.type = t;
     }
 
-    public Astat (Integer i)
+    public Statement(Integer i)
     {
         this.calculatorResult = i;
     }
-     public Astat (Float i)
+     public Statement(Float i)
     {
         this.calculatorFloatResult = i;
     }
      
     
-    public Astat(String ID, Expression e)
+    public Statement(String ID, Expression e)
     {
         this.ID = ID;
         this.e = e;
     }
     
-    public Astat(String ID1,String ID2 )
+    public Statement(String ID1, String ID2 )
     {
         this.ID = ID1;
         this.ID2 = ID2;
     }
 
-    public Astat(Expression e, Astat body)
+    public Statement(Expression e, Statement body)
     {
         this.e = e;
         this.body = body;
     }
     
-    public Astat(Expression e, Astat body1, Astat body2) {
+    public Statement(Expression e, Statement body1, Statement body2) {
         this.e = e;
 
         this.body = body1;
@@ -69,28 +69,28 @@ public class Astat
 
     }
 
-    public Astat(Expression e)
+    public Statement(Expression e)
     {
         this.e = e;
     }
 
-    private Astat(Lstat l)
+    private Statement(StatementList l)
     {
         statementList = l;
     }
 
     
-    public static Astat logic (Expression logical)
+    public static Statement logic (Expression logical)
     {
-        Astat logic = new Astat(logical);
+        Statement logic = new Statement(logical);
         logic.statementType="logic";
 
         return logic;
     }
     
-    public static Astat assignment(String ID, Expression e)
+    public static Statement assignment(String ID, Expression e)
     {
-        Astat assignment = new Astat(ID, e);
+        Statement assignment = new Statement(ID, e);
 
         assignment.statementType = "assignment";
 
@@ -98,68 +98,60 @@ public class Astat
 
     }
 
-    public static Astat assignment(Type t, String ID, Expression e)
+    public static Statement assignment(Type t, String ID, Expression e)
     {
-        Astat assignment = new Astat(t, ID, e);
+        Statement assignment = new Statement(t, ID, e);
         assignment.statementType = "instantiation";
 
         return assignment;
 
     }
 
-    public static Astat assignment(Type t, String ID)
+    public static Statement assignment(Type t, String ID)
     {
-        Astat assignment = new Astat(t, ID);
+        Statement assignment = new Statement(t, ID);
         assignment.statementType = "declaration";
 
         return assignment;
 
     }
 
-    public static Astat whileloop(Expression e, Astat whileBody)
+    public static Statement whileloop(Expression e, Statement whileBody)
     {
-        Astat loop = new Astat(e, whileBody);
+        Statement loop = new Statement(e, whileBody);
         loop.statementType = "whileloop";
         return loop;
 
     }
-    
-    public static Astat until_st(Expression e, Astat untilBody)
-    {
-        Astat loop = new Astat(e, untilBody);
-        loop.statementType = "until_st";
-        return loop;
 
-    }
-
-    public static Astat ifthen(Expression e, Astat ifbody)
+    public static Statement ifthen(Expression e, Statement ifbody)
     {
-        Astat ifthen = new Astat(e, ifbody);
+        Statement ifthen = new Statement(e, ifbody);
         ifthen.statementType = "ifthen";
         return ifthen;
     }
     
-    public static Astat ifthenelse(Expression e, Astat ifbody, Astat elsebody) {
+    public static Statement ifthenelse(Expression e, Statement ifbody, Statement elsebody) {
 
-        Astat ifthenelse = new Astat(e, ifbody,elsebody);
+        Statement ifthenelse = new Statement(e, ifbody, elsebody);
         ifthenelse.statementType = "ifthenelse";
         return ifthenelse;
         
     }
 
-    public static Astat print(Expression e)
+    public static Statement print(Expression e)
     {
 
-        Astat p = new Astat(e);
+        Statement p = new Statement(e);
         p.statementType = "print";
         return p;
 
     }
 
-    public static Astat list(Lstat l)
+    public static Statement list(StatementList l)
     {
 
-        Astat p = new Astat(l);
+        Statement p = new Statement(l);
         p.statementType = "list";
         return p;
 
@@ -236,7 +228,7 @@ public class Astat
             }
         } else if (statementType.equals("whileloop")) {
             if (e.getEntity().getType().isBool()) {
-                for (;;) {
+                while (true) {
                     if ((Boolean) e.getEntity().getValue()) {
                         body.execute();
                     } else {
@@ -246,19 +238,6 @@ public class Astat
             } else {
                 //type error
                 parser.type_error("", "while expression must be boolean.");
-            }
-        } else if (statementType.equals("until_st")) {
-            if (e.getEntity().getType().isBool()) {
-                for (;;) {
-                    if (!(Boolean) e.getEntity().getValue()) {
-                        body.execute();
-                    } else {
-                        break;
-                    }
-                }
-            } else {
-                //type error
-                parser.type_error("", "Until expression must be boolean.");
             }
         } else if (statementType.equals("print")) {
             //need to check type for casting from Entity
@@ -276,7 +255,7 @@ public class Astat
             }
 
         } else if (statementType.equals("list")) {
-            for (Astat s : statementList.statementLists) {
+            for (Statement s : statementList.statementLists) {
                 s.execute();
             }
         } else if (statementType.equals("calculator")) {
@@ -287,10 +266,6 @@ public class Astat
                 System.out.println(calculatorFloatResult);
             }
 
-        } else if (statementType.equals("function")) {
-            for (Astat s : statementList.statementLists) {
-                s.execute();
-            }
         }
 
     }

@@ -3,18 +3,18 @@ package src;
 
 public class Args {
 
-    private Aexp Fi, Se;
-    Args(Aexp x, Aexp y){
-        Fi = x;
+    private Expression left, right;
+    Args(Expression x, Expression y){
+        left = x;
 
-        Se =y;
+        right =y;
     }
 
-    public Aexp getfi() {
-        return Fi;
+    public Expression getLeft() {
+        return left;
     }
 
-    public Aexp getse() {
-        return Se;
+    public Expression getRight() {
+        return right;
     }
 }

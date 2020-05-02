@@ -103,19 +103,35 @@ boolean = true|false
     "-"        { debug("MINUS"); return symbol(sym.MINUS); }
     "*"        { debug("TIMES"); return symbol(sym.TIMES); }
     "/"        { debug("DIVIDE"); return symbol(sym.DIVIDE); }
+    "{"        { debug("LCURL"); return symbol(sym.LCURL); }
+    "}"        { debug("RCURL"); return symbol(sym.RCURL); }
     "("        { debug("LPAR"); return symbol(sym.LPAR); }
     ")"        { debug("RPAR"); return symbol(sym.RPAR); }
-    "="        { debug("EQ"); return symbol(sym.EQ); }
     "="        { debug("EQ"); return symbol(sym.EQ); }
     ";"        { debug("SEMI"); return symbol(sym.SEMI); }
     ","        { debug("COMMA"); return symbol(sym.COMMA); }
 
-    "publish"     { debug("publish"); return symbol (sym.PUBLISH);}
+    "publish"  { debug("publish"); return symbol (sym.PUBLISH);}
+    "if"       { debug("if"); return symbol (sym.IF);}
+    "else"     { debug("else"); return symbol (sym.ELSE);}
+    "while"     { debug("while"); return symbol (sym.WHILE);}
+    "and"     { debug("and"); return symbol (sym.AND);}
+    "or"     { debug("or"); return symbol (sym.OR);}
+    "<="     { debug("lte"); return symbol (sym.LTE);}
+    ">="     { debug("gte"); return symbol (sym.GTE);}
+    ">"     { debug("gt"); return symbol (sym.GT);}
+    "<"     { debug("lt"); return symbol (sym.LT);}
+    "is"     { debug("equal"); return symbol (sym.EQUAL);}
+    "is not"     { debug("notequal"); return symbol (sym.NOTEQUAL);}
+    "=="     { debug("equal"); return symbol (sym.EQUAL);}
+    "!="     { debug("notequal"); return symbol (sym.NOTEQUAL);}
 
     "bool"     { debug("BOOL"); return symbol (sym.BOOL);}
     "int"      { debug("INT"); return symbol (sym.INT);}
     "float"    { debug("FLOAT"); return symbol (sym.FLOAT);}
     "char"     { debug("STRING"); return symbol (sym.CHAR);}
+
+    //"true"     { debug("true"); return symbol (sym.TRUE);}
 
 
     {int}      { debug("INTEGER_LITERAL", yytext()); return symbol(sym.INTEGER_LITERAL, new Integer(yytext())); }

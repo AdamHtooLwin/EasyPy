@@ -1,6 +1,28 @@
 int x, a; char y, s; bool z; float d;
 
-x = 1;
+x = 3;
+z = false;
+
+while (x < 5) {
+    x = x + 1;
+}
+
+publish(z);
+while (z is false) {
+    z = true;
+}
+publish(z);
+
+publish(x);
+
+if (x is 5) {
+    publish("x is 3");
+}
+else
+{
+    publish("x is not 3");
+}
+
 y = "Hello world ";
 s = y + "everyone!";
 x = (x + 2) * (4-2);

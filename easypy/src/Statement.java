@@ -7,7 +7,7 @@ public class Astat
     String statementType;
     String ID;
     Type type;
-    Aexp e;
+    Expression e;
     Astat body;
     Astat elsebody;
     Lstat statementList;
@@ -16,10 +16,10 @@ public class Astat
     String ID2;
 
     //for logical
-    Aexp left,right;
+    Expression left,right;
     
 
-    public Astat(Type t, String ID, Aexp e)
+    public Astat(Type t, String ID, Expression e)
     {
         this.ID = ID;
         this.e = e;
@@ -43,7 +43,7 @@ public class Astat
     }
      
     
-    public Astat(String ID, Aexp e)
+    public Astat(String ID, Expression e)
     {
         this.ID = ID;
         this.e = e;
@@ -55,13 +55,13 @@ public class Astat
         this.ID2 = ID2;
     }
 
-    public Astat(Aexp e, Astat body)
+    public Astat(Expression e, Astat body)
     {
         this.e = e;
         this.body = body;
     }
     
-    public Astat(Aexp e, Astat body1, Astat body2) {
+    public Astat(Expression e, Astat body1, Astat body2) {
         this.e = e;
 
         this.body = body1;
@@ -69,7 +69,7 @@ public class Astat
 
     }
 
-    public Astat(Aexp e)
+    public Astat(Expression e)
     {
         this.e = e;
     }
@@ -80,7 +80,7 @@ public class Astat
     }
 
     
-    public static Astat logic (Aexp logical)
+    public static Astat logic (Expression logical)
     {
         Astat logic = new Astat(logical);
         logic.statementType="logic";
@@ -88,7 +88,7 @@ public class Astat
         return logic;
     }
     
-    public static Astat assignment(String ID, Aexp e)
+    public static Astat assignment(String ID, Expression e)
     {
         Astat assignment = new Astat(ID, e);
 
@@ -98,7 +98,7 @@ public class Astat
 
     }
 
-    public static Astat assignment(Type t, String ID, Aexp e)
+    public static Astat assignment(Type t, String ID, Expression e)
     {
         Astat assignment = new Astat(t, ID, e);
         assignment.statementType = "instantiation";
@@ -106,7 +106,7 @@ public class Astat
         return assignment;
 
     }
-    
+
     public static Astat assignment(Type t, String ID)
     {
         Astat assignment = new Astat(t, ID);
@@ -116,7 +116,7 @@ public class Astat
 
     }
 
-    public static Astat whileloop(Aexp e, Astat whileBody)
+    public static Astat whileloop(Expression e, Astat whileBody)
     {
         Astat loop = new Astat(e, whileBody);
         loop.statementType = "whileloop";
@@ -124,7 +124,7 @@ public class Astat
 
     }
     
-    public static Astat until_st(Aexp e, Astat untilBody)
+    public static Astat until_st(Expression e, Astat untilBody)
     {
         Astat loop = new Astat(e, untilBody);
         loop.statementType = "until_st";
@@ -132,14 +132,14 @@ public class Astat
 
     }
 
-    public static Astat ifthen(Aexp e, Astat ifbody)
+    public static Astat ifthen(Expression e, Astat ifbody)
     {
         Astat ifthen = new Astat(e, ifbody);
         ifthen.statementType = "ifthen";
         return ifthen;
     }
     
-    public static Astat ifthenelse(Aexp e, Astat ifbody, Astat elsebody) {
+    public static Astat ifthenelse(Expression e, Astat ifbody, Astat elsebody) {
 
         Astat ifthenelse = new Astat(e, ifbody,elsebody);
         ifthenelse.statementType = "ifthenelse";
@@ -147,7 +147,7 @@ public class Astat
         
     }
 
-    public static Astat print(Aexp e)
+    public static Astat print(Expression e)
     {
 
         Astat p = new Astat(e);

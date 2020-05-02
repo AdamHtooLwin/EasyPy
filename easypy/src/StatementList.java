@@ -5,14 +5,14 @@ import java.util.ArrayList;
 
 public class Lstat {
 
-    ArrayList<Astat> statementLists;
+    ArrayList<Statement> statementLists;
 
-    public Lstat(Astat s){
-        statementLists  = new ArrayList<Astat>();
+    public Lstat(Statement s){
+        statementLists  = new ArrayList<Statement>();
         statementLists.add(s);
     }
 
-    public Lstat(Lstat l, Astat s){
+    public Lstat(Lstat l, Statement s){
         statementLists = l.statementLists;
         statementLists.add(s);
     }
@@ -20,8 +20,8 @@ public class Lstat {
     public void execute(){
         System.out.println("\n===========PROGRAM OUTPUT===========");
 
-        for (Astat astat : statementLists) {
-            astat.execute();
+        for (Statement statement : statementLists) {
+            statement.execute();
         }
     }
 

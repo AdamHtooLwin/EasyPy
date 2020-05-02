@@ -1,7 +1,5 @@
 package src;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 public class Expression {
     private Integer INTEGER_LITERAL;
     private Float FLOAT_LITERAL;

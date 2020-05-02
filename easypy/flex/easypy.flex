@@ -80,7 +80,7 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 dot = "."
 alphabet = [a-zA-Z ]*
 digit    = [0-9]*
-specials = [!|@|#|$|%|\^|&|*|(|)]*
+specials = [!|@|#|$|%|\^|&|*|(|)|\']*
 
 // Data types
 int = 0 | [1-9][0-9]*
@@ -108,6 +108,9 @@ boolean = true|false
     "="        { debug("EQ"); return symbol(sym.EQ); }
     "="        { debug("EQ"); return symbol(sym.EQ); }
     ";"        { debug("SEMI"); return symbol(sym.SEMI); }
+    ","        { debug("COMMA"); return symbol(sym.COMMA); }
+
+    "publish"     { debug("publish"); return symbol (sym.PUBLISH);}
 
     "bool"     { debug("BOOL"); return symbol (sym.BOOL);}
     "int"      { debug("INT"); return symbol (sym.INT);}

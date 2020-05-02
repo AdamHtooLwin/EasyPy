@@ -11,23 +11,122 @@ public class Type {
 
     public static final int INTEGER = 1;
     public static final int BOOLEAN = 2;
-    public static final int FLOAT = 3;
-    public static final int STRING = 4;
+    public static final int ERRORTYPE = 3;
+    public static final int FLOAT = 4;
+    public static final int STRING = 5;
 
+    static HashMap<Integer, Type> types = new HashMap<Integer, Type>();
     int tag;
     String code;
+
+    public Type() {
+        initTypes();
+    }
 
     public Type(int t, String c) {
         tag = t;
         code = c;
     }
 
-    public int getTag() {
-        return tag;
-    }
-
     public String getCode() {
         return code;
     }
 
+    public static void initTypes() {
+        types.put(INTEGER , new Type(INTEGER, "int"));
+        types.put(BOOLEAN, new Type(BOOLEAN, "bool"));
+        types.put(FLOAT, new Type(FLOAT, "float"));
+        types.put(STRING, new Type(STRING, "String"));
+        types.put(ERRORTYPE, new Type(ERRORTYPE, "error"));
+    }
+
+    public static Type string() {
+        return (Type) types.get(STRING);
+    }
+
+    public boolean isString() {
+        if (tag == STRING) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static Type integer() {
+        return (Type) types.get(INTEGER);
+    }
+
+    public boolean isInteger() {
+        if (tag == INTEGER) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static Type floating_point() {
+        return (Type) types.get(FLOAT);
+    }
+
+    public boolean isFloating_point() {
+        if (tag == FLOAT) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static Type bool() {
+        return (Type) types.get(BOOLEAN);
+    }
+
+    public boolean isBool() {
+        if (tag == BOOLEAN) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static Type errortype() {
+        return (Type) types.get(ERRORTYPE);
+    }
+
+    public boolean isErrortype() {
+        if (tag == ERRORTYPE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean equals(Type t1, Type t2){
+        boolean result = false;
+
+        if (t1.getCode().equals(t2.getCode())){
+            result = true;
+        }
+
+        return result;
+
+
+    }
+
+    public String getTypeName(){
+        String result = "";
+
+        if(isString()){
+            result = "String";
+        }else if(isBool()){
+            result = "Boolean";
+        }else if(isErrortype()){
+            result = "Error Type";
+        }else if(isFloating_point()){
+            result = "Float";
+        }else if(isInteger()){
+            result = "Integer";
+        }
+
+        return result;
+    }
 }

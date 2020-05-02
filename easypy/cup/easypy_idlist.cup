@@ -1,0 +1,206 @@
+/* ----------------------User code--------------------*/
+
+package src;
+import java.util.*;
+
+parser code {:
+    public void sem_error(String context , String message)
+    {
+        System.err.println("Semantic Error:"+ "<"+context+">" + message);
+        System.exit(1);
+    }
+
+    public void type_error (String context, String message)
+    {
+        System.err.println("Type Error:"+ "<"+context+">" + message);
+        System.exit(1);
+    }
+:};
+   
+/* ------------Grammar symbol declarations----------- */
+   
+terminal    COMMA, SEMI, PLUS, MINUS, TIMES, DIVIDE, MOD, LPAR, RPAR, EQ, INT, BOOL, CHAR, FLOAT, LTE, GTE, GT, LT, EQUAL, NOTEQUAL, OR, AND;
+
+terminal Integer   INTEGER_LITERAL;
+terminal Boolean   BOOLEAN_LITERAL;
+terminal Float     FLOATING_LITERAL;
+terminal String    CHAR_LITERAL;
+terminal String    ID;
+
+non terminal    program, declaration, statement, assignment_sequence, assignment;
+non terminal Entity    E, T, F;
+non terminal Type type;
+non terminal ArrayList<String> id_list;
+
+/* Precedences */
+precedence left SEMI;
+precedence left PLUS, MINUS;
+precedence left TIMES;
+   
+/* ------------Grammar rules----------- */
+
+program ::= declaration:d SEMI statement:s
+                {: :};
+
+statement ::= declaration:d SEMI statement:s
+                {: :}
+              | {: :};
+
+statement ::= assignment_sequence:as SEMI statement:s
+                {: :};
+
+assignment_sequence ::= ID:i EQ E:e
+                {:
+                System.out.println(e.getType());
+                System.out.println("Assigning variable " + i + " with value " + "" + e.getValue());
+                Memory m = Memory.getInstance();
+                if (!m.SymbolTable.containsKey(i)){
+                    parser.sem_error(i,"Variable undeclared");
+                }
+                else {
+                    if (m.SymbolTable.get(i).tag == e.getType().tag){
+                        System.out.println("Storing " + m.SymbolTable.get(i).code + " in ValueTable");
+                        m.ValueTable.put(i, e.getValue());
+                    }
+                    else {
+                        parser.type_error("e", " : expression in the assignment statement must have the type " + m.SymbolTable.get(i).code);
+                    }
+                }
+                :};
+
+declaration ::= type:t id_list:il
+                {:
+                for (String i : il){
+                    System.out.println("Declaring variable " + i + " of type " + t.getCode());
+                    Memory m = Memory.getInstance();
+                    if (m.SymbolTable.containsKey(i)){
+                        parser.sem_error(i,"Duplicate declaration "+i);
+                    }
+                    m.SymbolTable.put(i, t);
+                }
+                :};
+
+id_list ::=   id_list:il COMMA ID:i
+            {:
+                il.add(i);
+                RESULT = il;
+            :}
+          |
+            ID:i
+            {:
+                ArrayList<String> list = new ArrayList<String>();
+                list.add(i);
+                RESULT = list;
+            :};
+
+type ::= INT
+            {: RESULT = new Type(Type.INTEGER, "int"); :}
+        | FLOAT
+            {: RESULT = new Type(Type.FLOAT, "float"); :}
+        | CHAR
+            {: RESULT = new Type(Type.STRING, "char"); :}
+        | BOOL
+            {: RESULT = new Type(Type.BOOLEAN, "bool"); :};
+
+E    ::= E:e PLUS T:t
+                {:
+                if (e.getType().tag == Type.INTEGER && t.getType().tag == Type.INTEGER){
+                    int evaluation = (int) e.getValue() + (int) t.getValue();
+                    RESULT = new Entity((Object) evaluation, new Type(Type.INTEGER, "int"));
+                }
+                else if (e.getType().tag == Type.FLOAT && t.getType().tag == Type.FLOAT){
+                    float evaluation = (float) e.getValue() + (float) t.getValue();
+                    RESULT = new Entity((Object) evaluation, new Type(Type.FLOAT, "float"));
+                }
+                else if (e.getType().tag == Type.STRING && t.getType().tag == Type.STRING){
+                    String evaluation = (String) e.getValue() + (String) t.getValue();
+                    RESULT = new Entity((Object) evaluation, new Type(Type.STRING, "char"));
+                }
+                else {
+                    parser.type_error("+", "Invalid operation for types " + e.getType().code + " and " + t.getType().code);
+                }
+                :}
+            | E:e MINUS T:t
+                {:
+                if (e.getType().tag == Type.INTEGER && t.getType().tag == Type.INTEGER){
+                    int evaluation = (int) e.getValue() - (int) t.getValue();
+                    RESULT = new Entity((Object) evaluation, new Type(Type.INTEGER, "int"));
+                }
+                else if (e.getType().tag == Type.FLOAT && t.getType().tag == Type.FLOAT){
+                    float evaluation = (float) e.getValue() - (float) t.getValue();
+                    RESULT = new Entity((Object) evaluation, new Type(Type.FLOAT, "float"));
+                }
+                else {
+                    parser.type_error("-", "Invalid operation for types " + e.getType().code + " and " + t.getType().code);
+                }
+                :}
+            | T:t
+                {: RESULT = t; :};
+
+T       ::= T:t TIMES F:f
+                {:
+                if (t.getType().tag == Type.INTEGER && f.getType().tag == Type.INTEGER){
+                    int evaluation = (int) t.getValue() * (int) f.getValue();
+                    RESULT = new Entity((Object) evaluation, new Type(Type.INTEGER, "int"));
+                }
+                else if (t.getType().tag == Type.FLOAT && f.getType(  ).tag == Type.FLOAT){
+                    float evaluation = (float) t.getValue() * (float) f.getValue();
+                    RESULT = new Entity((Object) evaluation, new Type(Type.FLOAT, "float"));
+                }
+                else {
+                    parser.type_error("*", "Invalid operation for types " + t.getType().code + " and " + f.getType().code);
+                }
+                 :}
+            | T:t DIVIDE F:f
+                {:
+
+                if (t.getType().tag == Type.INTEGER && f.getType().tag == Type.INTEGER){
+                    int evaluation = (int) t.getValue() / (int) f.getValue();
+                    RESULT = new Entity((Object) evaluation, new Type(Type.INTEGER, "int"));
+                }
+                else if (t.getType().tag == Type.FLOAT && f.getType(  ).tag == Type.FLOAT){
+                    float evaluation = (float) t.getValue() / (float) f.getValue();
+                    RESULT = new Entity((Object) evaluation, new Type(Type.FLOAT, "float"));
+                }
+                else {
+                    parser.type_error("/", "Invalid operation for types " + t.getType().code + " and " + f.getType().code);
+                }
+                :}
+            | F:f
+                {:
+                RESULT = f;
+                :};
+
+F       ::= LPAR E:e RPAR
+                {:
+                if (e.getType().tag == Type.INTEGER | e.getType().tag == Type.FLOAT){
+                    RESULT = e;
+                }
+                else{
+                    parser.type_error("()", "Redundant parentheses for " + e.getType().code);
+                }
+                :}
+            | INTEGER_LITERAL:n
+                {:
+                RESULT = new Entity((Object) n, new Type(Type.INTEGER, "int"));
+                :}
+            | BOOLEAN_LITERAL:b
+                {:
+                RESULT = new Entity((Object) b, new Type(Type.BOOLEAN, "bool"));
+                :}
+            | FLOATING_LITERAL:f
+                {:
+                RESULT = new Entity((Object) f, new Type(Type.FLOAT, "float"));
+                :}
+            | CHAR_LITERAL:c
+                {:
+                RESULT = new Entity((Object) c, new Type(Type.STRING, "char"));
+                :}
+            | ID:i
+                {:
+                Memory m = Memory.getInstance();
+                RESULT = new Entity((Object) m.ValueTable.get(i), new Type(m.SymbolTable.get(i).tag, m.SymbolTable.get(i).code));
+                :}
+            ;
+
+

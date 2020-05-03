@@ -29,10 +29,9 @@ public class Memory {
 
     public void memory_dump(){
         System.out.println("Value Table: " + ValueTable);
-//        System.out.println("Symbol Table: " + SymbolTable);
-        System.out.print("Symbol Table: {");
+        System.out.println("Symbol Table: {");
         for (Map.Entry<String, Type> entry : SymbolTable.entrySet()) {
-            System.out.print(entry.getKey() + ":" + entry.getValue().getCode() + " ");
+            System.out.println("\t" + entry.getKey() + ":" + entry.getValue().getCode());
         }
         System.out.print("}");
     }

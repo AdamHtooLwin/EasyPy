@@ -135,10 +135,11 @@ public class Main extends javax.swing.JFrame {
             System.out.println("");
             System.out.println("\n===========PROGRAM OUTPUT===========");
             statementlist.execute(OutputTextArea, PrefixTextArea);
-            PrefixTextArea.setText(statementlist.getPrefix(PrefixTextArea).toString());
-
             System.out.println("==========Compiler Memory Assets=========");
             m.memory_dump();
+            PrefixTextArea.setText(statementlist.getPrefix(PrefixTextArea).toString());
+
+
         } catch (Exception e) {
             OutputTextArea.setText("Syntax Error");
             /* do cleanup here -- possibly rethrow e */

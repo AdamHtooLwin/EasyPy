@@ -7,13 +7,11 @@ parser code {:
     public void sem_error(String context , String message)
     {
         System.err.println("Semantic Error: "+ "<"+context+">" + message);
-        System.exit(1);
     }
 
     public void type_error (String context, String message)
     {
         System.err.println("Type Error:"+ "<"+context+">" + message);
-        System.exit(1);
     }
 :};
    

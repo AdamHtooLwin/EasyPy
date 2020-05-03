@@ -8,11 +8,6 @@ public class StatementList {
     ArrayList<Statement> statementList;
 
     // initialize new list with 1 statement
-    public StatementList(StringBuilder prefix, StatementList sl){
-        statementList  = new ArrayList<Statement>();
-    }
-
-    // initialize new list with 1 statement
     public StatementList(Statement s){
         statementList  = new ArrayList<Statement>();
         statementList.add(s);

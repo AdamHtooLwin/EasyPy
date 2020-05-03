@@ -359,11 +359,6 @@ public class Expression
         else if (tag[4])    // operation on two expressions
         {
 
-            /*
-             * Typecasts will throw a exception from java itself, when there
-             * is a type error in the language
-             */
-
             if (Operator == sym.PLUS)
             {
 

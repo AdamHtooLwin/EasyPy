@@ -6,6 +6,10 @@ a = 23 % 6;
 z = false;
 p = "I'm going to say, 'I love you.'";
 
+if (x is 3) {
+    publish("x is 3");
+};
+
 while (x < 5) {
     if (z is false){
         publish("Z is false!");

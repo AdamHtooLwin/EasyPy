@@ -195,7 +195,7 @@ public class Statement
                 m.ValueTable.put(ID, e.getEntity().getValue());
             }
         } else if (statementType.equals("ifthen")) {
-            if (e.getEntity().getType().isBool()) //expr must be boolean
+            if (e.getEntity().getType().isBool() && e.getEntity() != null) //expr must be boolean
             {
                 boolean b = (Boolean) e.getEntity().getValue();
                 if ((Boolean) e.getEntity().getValue()) {
@@ -218,7 +218,7 @@ public class Statement
         } else if (statementType.equals("whileloop")) {
             if (e.getEntity().getType().isBool()) {
                 while (true) {
-                    if ((Boolean) e.getEntity().getValue()) {
+                    if ((Boolean) e.getEntity().getValue() && e.getEntity() != null) {
                         body.execute(jTextAreaOutput, jTextAreaPrefix);
                     } else {
                         break;

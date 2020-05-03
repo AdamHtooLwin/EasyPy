@@ -314,6 +314,14 @@ public class Expression
             {
                 s = "> (" + Operands.getLeft().getPrefix() + " " + Operands.getRight().getPrefix() + ")";
             }
+            if (Operator == sym.AND)
+            {
+                s = "and (" + Operands.getLeft().getPrefix() + ") (" + Operands.getRight().getPrefix() + ")";
+            }
+            if (Operator == sym.OR)
+            {
+                s = "or (" + Operands.getLeft().getPrefix() + " " + Operands.getRight().getPrefix() + ")";
+            }
         } else if (tag[5])
         {
             s = String.valueOf(BOL);
@@ -526,7 +534,7 @@ public class Expression
 
                 }else if (Operands.getLeft().getType().isBool())
                 {
-                    boolean val = (Boolean) Operands.getLeft().getEntity().getValue() != (Boolean)Operands.getRight().getEntity().getValue();
+                    boolean val = (Boolean) !Operands.getLeft().getEntity().getValue().equals((Boolean)Operands.getRight().getEntity().getValue());
                     typeVal = new Entity(val, Type.bool());
                 }
             }

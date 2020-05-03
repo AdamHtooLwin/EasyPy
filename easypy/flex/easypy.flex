@@ -100,6 +100,7 @@ boolean = true|false
     "-"        { debug("MINUS"); return symbol(sym.MINUS); }
     "*"        { debug("TIMES"); return symbol(sym.TIMES); }
     "/"        { debug("DIVIDE"); return symbol(sym.DIVIDE); }
+    "%"        { debug("MOD"); return symbol(sym.MOD); }
     "{"        { debug("LCURL"); return symbol(sym.LCURL); }
     "}"        { debug("RCURL"); return symbol(sym.RCURL); }
     "("        { debug("LPAR"); return symbol(sym.LPAR); }

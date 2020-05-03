@@ -164,7 +164,7 @@ public class Statement
             case "ifthen":
                 return "if (" + e.getPrefix() + ") {" + body.getPrefix(true).toString() + "}";
             case "ifthenelse":
-                return "if (" + e.getPrefix() + ") {" + body.getPrefix(true).toString() + "} else {" + e.getPrefix() + " " + elsebody.getPrefix(true) + "}";
+                return "if (" + e.getPrefix() + ") {" + body.getPrefix(true).toString() + "} else {" + elsebody.getPrefix(true) + "}";
             case "print":
                 return "publish(" + e.getPrefix() + ")";
             case "whileloop":

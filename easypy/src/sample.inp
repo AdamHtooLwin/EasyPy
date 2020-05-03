@@ -1,6 +1,7 @@
 int x, a; char y, s; bool z; float d;
 
 x = 3;
+a = 23 % 6;
 z = false;
 
 while (x < 5) {
@@ -16,12 +17,12 @@ publish(z);
 
 publish(x);
 
-if (x is 5) {
-    publish("x is 5!");
+if (x is a and z is true) {
+    publish("x is 5 and z is true!");
 }
 else
 {
-    publish("x is not 5! Oh no!");
+    publish("x is not 5 or z is not true! Oh no!");
 };
 
 y = "Hello world ";

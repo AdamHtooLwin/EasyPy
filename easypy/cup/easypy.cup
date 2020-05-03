@@ -30,12 +30,12 @@ terminal Float     FLOATING_LITERAL;
 terminal String    CHAR_LITERAL;
 terminal String    ID;
 
-non terminal                    program, declaration, declaration_list;
+non terminal                    program, declaration;
 non terminal Type               type;
 
 non terminal Statement              statement, assignment, publish, until_st;
 non terminal StatementList              statement_list, while, ifthen;
-non terminal Expression               E, T, F, L;
+non terminal Expression               E, T, F, L, logical;
 non terminal ArrayList<String>  id_list;
 
 /* Precedences */
@@ -105,20 +105,6 @@ type ::= INT
         | BOOL
             {: RESULT = new Type(Type.BOOLEAN, "bool"); :};
 
-//statement_list ::= statement_list:sl statement:s
-//                {: RESULT = new StatementList(sl, s); :}
-//              | statement:s {: RESULT = new StatementList(s); :};
-
-//statement_list ::= assignment:as
-//                {: RESULT = new StatementList(as); :}
-//                | publish:p
-//                {: RESULT = new StatementList(p); :}
-//                | ifthen:ift
-//                {: RESULT = ift; :}
-//                | while:w
-//                {: RESULT = w; :}
-//                ;
-
 statement_list ::= WHILE LPAR L:l RPAR LCURL statement_list:sl RCURL
                 {:
                 if((Boolean) l.getType().isBool()){
@@ -181,7 +167,8 @@ E    ::= E:e PLUS T:t
                 RESULT = new Expression(new Args(e,t), sym.MINUS);
                 :}
             | T:t
-                {: RESULT = t; :};
+                {: RESULT = t; :}
+            ;
 
 T       ::= T:t TIMES F:f
                 {:
@@ -190,6 +177,10 @@ T       ::= T:t TIMES F:f
             | T:t DIVIDE F:f
                 {:
                 RESULT = new Expression(new Args(t,f), sym.DIVIDE);
+                :}
+            | T:t MOD F:f
+                {:
+                RESULT = new Expression(new Args(t,f), sym.MOD);
                 :}
             | F:f
                 {:
@@ -222,12 +213,15 @@ F       ::= LPAR E:e RPAR
                 :}
             ;
 
-L ::= E:e1 AND E:e2
-          {:RESULT = new Expression(new Args(e1, e2), sym.AND);:}
-          |
-          E:e1 OR E:e2
-          {:RESULT = new Expression(new Args(e1, e2), sym.OR);:}
-          |
+L ::= logical:l1 AND logical:l2
+            {: RESULT = new Expression(new Args(l1, l2), sym.AND); :}
+            | logical:l1 OR logical:l2
+            {: RESULT = new Expression(new Args(l1, l2), sym.OR); :}
+            | logical:l
+            {: RESULT = l; :}
+            ;
+
+logical ::=
           E:e1 LT E:e2
           {:RESULT = new Expression(new Args(e1, e2), sym.LT);:}
           |

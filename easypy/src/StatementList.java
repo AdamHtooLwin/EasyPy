@@ -20,10 +20,15 @@ public class StatementList {
     public void execute(){
         System.out.println("");
         System.out.println("\n===========PROGRAM OUTPUT===========");
+        StringBuilder program = new StringBuilder();
 
         for (Statement statement : statementLists) {
             statement.execute();
+            program.append(statement.getPrefix()).append("\n");
         }
+
+        System.out.println("===========PREFIX===========");
+        System.out.print(program);
     }
 
     public void showStatements()

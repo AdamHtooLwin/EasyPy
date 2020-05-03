@@ -11,8 +11,6 @@ public class Statement
     Statement body;
     Statement elsebody;
     StatementList statementList;
-    int calculatorResult;
-    float calculatorFloatResult;
     String ID2;
 
     //for logical
@@ -32,35 +30,21 @@ public class Statement
         this.e = null;
         this.type = t;
     }
-
-    public Statement(Integer i)
-    {
-        this.calculatorResult = i;
-    }
-     public Statement(Float i)
-    {
-        this.calculatorFloatResult = i;
-    }
-     
     
     public Statement(String ID, Expression e)
     {
         this.ID = ID;
         this.e = e;
     }
-    
-    public Statement(String ID1, String ID2 )
-    {
-        this.ID = ID1;
-        this.ID2 = ID2;
-    }
 
+    // while and if
     public Statement(Expression e, Statement body)
     {
         this.e = e;
         this.body = body;
     }
-    
+
+    // if else
     public Statement(Expression e, Statement body1, Statement body2) {
         this.e = e;
 
@@ -93,24 +77,6 @@ public class Statement
         Statement assignment = new Statement(ID, e);
 
         assignment.statementType = "assignment";
-
-        return assignment;
-
-    }
-
-    public static Statement assignment(Type t, String ID, Expression e)
-    {
-        Statement assignment = new Statement(t, ID, e);
-        assignment.statementType = "instantiation";
-
-        return assignment;
-
-    }
-
-    public static Statement assignment(Type t, String ID)
-    {
-        Statement assignment = new Statement(t, ID);
-        assignment.statementType = "declaration";
 
         return assignment;
 
@@ -158,33 +124,62 @@ public class Statement
     }
 
     public String getstat() {
-        System.out.println(statementType);
+//        System.out.println(statementType);
 
-        if (statementType.equals("assignment")) {
-            return ID + "=" + e.getexp();
-        } else if (statementType.equals("intantiation")) {
-            return type.getCode() + " " + ID + "=" + e.getexp();
-        } else if (statementType.equals("ifthen")) {
-            return "if " + e.getexp() + " " + body.getstat();
-        } else if (statementType.equals("ifthenelse")) {
-            return "else " + e.getexp() + " " + body.getstat();
-        } else if (statementType.equals("print")) {
-            return "print " + e.getexp();
-        } else if (statementType.equals("whileloop")) {
-            return "while " + e.getexp() + " do " + body.getstat();
-        } else if (statementType.equals("list")) {
-            return "list";
-        } else if (statementType.equals("function-return")) {
-            return "function-return";
-        } else if (statementType.equals("until_st")) {
-            return "until_st";
-        } else if (statementType.equals("type-error")) {
-            return "type-error";
-        } else {
-            return "unknown";
+        switch (statementType) {
+            case "assignment":
+                return ID + "=" + e.getexp();
+            case "intantiation":
+                return type.getCode() + " " + ID + "=" + e.getexp();
+            case "ifthen":
+                return "if " + e.getexp() + " " + body.getstat();
+            case "ifthenelse":
+                return "if " + e.getexp() + " " + body.getstat() + " else " + e.getexp() + " " + elsebody.getstat();
+            case "print":
+                return "publish (\"" + e.getexp() + "\")";
+            case "whileloop":
+                return "while (" + e.getexp() + ") { " + body.getstat() + " } ";
+            case "list":
+                return "list";
+            case "function-return":
+                return "function-return";
+            case "until_st":
+                return "until_st";
+            case "type-error":
+                return "type-error";
+            default:
+                return "unknown";
         }
 
+    }
 
+    public String getPrefix() {
+//        System.out.println(statementType);
+
+        switch (statementType) {
+            case "assignment":
+                return "assign " + ID + " (" + e.getPrefix() + ")";
+            case "intantiation":
+                return type.getCode() + " " + ID + "=" + e.getPrefix();
+            case "ifthen":
+                return "if (" + e.getPrefix() + ") {" + body.getPrefix() + "}";
+            case "ifthenelse":
+                return "if (" + e.getPrefix() + ") {" + body.getPrefix() + "} else {" + e.getPrefix() + " " + elsebody.getPrefix() + "}";
+            case "print":
+                return "publish(" + e.getPrefix() + ")";
+            case "whileloop":
+                return "while (" + e.getPrefix() + ") { " + body.getPrefix() + " } ";
+            case "list":
+                return "list";
+            case "function-return":
+                return "function-return";
+            case "until_st":
+                return "until_st";
+            case "type-error":
+                return "type-error";
+            default:
+                return "unknown";
+        }
 
     }
 
@@ -258,14 +253,6 @@ public class Statement
             for (Statement s : statementList.statementLists) {
                 s.execute();
             }
-        } else if (statementType.equals("calculator")) {
-            if (type.isInteger()) {
-                System.out.println(calculatorResult);
-            }
-            if (type.isFloating_point()) {
-                System.out.println(calculatorFloatResult);
-            }
-
         }
 
     }

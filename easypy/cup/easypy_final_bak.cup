@@ -33,8 +33,8 @@ terminal String    ID;
 non terminal                    program, declaration, declaration_list;
 non terminal Type               type;
 
-non terminal Statement              statement, assignment, publish, until_st;
-non terminal StatementList              statement_list, while, ifthen;
+non terminal Statement              statement, assignment, ifthen, publish, while, until_st;
+non terminal StatementList              statement_list;
 non terminal Expression               E, T, F, L;
 non terminal ArrayList<String>  id_list;
 
@@ -45,30 +45,10 @@ precedence left TIMES;
    
 /* ------------Grammar rules----------- */
 
-program ::= declaration:d SEMI statement_list:sl
-                {:
-                System.out.println("");
-                System.out.println("\n===========PROGRAM OUTPUT===========");
-                sl.execute();
+program ::= declaration_list:d SEMI statement_list:sl
+                {: sl.execute(); :};
 
-                System.out.println("\n===========PREFIX===========");
-                System.out.println(sl.getPrefix().toString());
-                :};
-
-statement_list ::= declaration:d SEMI statement_list:sl
-                    {: RESULT = sl; :}
-                | statement_list:sl1 SEMI statement_list:sl2
-                    {:
-                    if(sl2 == null){
-                        RESULT = sl1;
-                    }
-                    else {
-                        RESULT = new StatementList(sl1, sl2);
-                    }
-
-                    :}
-                | {: :}
-                ;
+declaration_list ::= declaration_list:dl SEMI declaration:d | declaration:d;
 
 
 declaration ::= type:t id_list:il
@@ -105,24 +85,24 @@ type ::= INT
         | BOOL
             {: RESULT = new Type(Type.BOOLEAN, "bool"); :};
 
-//statement_list ::= statement_list:sl statement:s
-//                {: RESULT = new StatementList(sl, s); :}
-//              | statement:s {: RESULT = new StatementList(s); :};
+statement_list ::= statement_list:sl statement:s
+                {: RESULT = new StatementList(sl, s); :}
+              | statement:s {: RESULT = new StatementList(s); :};
 
-//statement_list ::= assignment:as
-//                {: RESULT = new StatementList(as); :}
-//                | publish:p
-//                {: RESULT = new StatementList(p); :}
-//                | ifthen:ift
-//                {: RESULT = ift; :}
-//                | while:w
-//                {: RESULT = w; :}
-//                ;
+statement ::= assignment:as SEMI
+                {: RESULT = as; :}
+                | publish:p SEMI
+                {: RESULT = p; :}
+                | ifthen:ift
+                {: RESULT = ift; :}
+                | while:w
+                {: RESULT = w; :}
+                ;
 
-statement_list ::= WHILE LPAR L:l RPAR LCURL statement_list:sl RCURL
+while ::= WHILE LPAR L:l RPAR LCURL statement:s RCURL
                 {:
                 if((Boolean) l.getType().isBool()){
-                    RESULT = new StatementList(Statement.whileloop(l, sl));
+                    RESULT = Statement.whileloop(l, s);
                 }
                 else {
                      parser.type_error("l", " : expression in the while condition must be boolean.");
@@ -130,11 +110,10 @@ statement_list ::= WHILE LPAR L:l RPAR LCURL statement_list:sl RCURL
                 :}
                 ;
 
-statement_list ::=  IF LPAR L:l RPAR LCURL statement_list:sl RCURL
+ifthen ::=  IF LPAR L:l RPAR LCURL statement:s RCURL
             {:
-                System.out.println("At ifthen");
                 if((Boolean) l.getType().isBool()){
-                    RESULT = new StatementList(Statement.ifthen(l, sl));
+                    RESULT = Statement.ifthen(l, s);
                 }
                 else {
                      parser.type_error("l", " : expression in the if condition must be boolean.");
@@ -142,18 +121,18 @@ statement_list ::=  IF LPAR L:l RPAR LCURL statement_list:sl RCURL
 
             :}
           |
-            IF LPAR L:l RPAR LCURL statement_list:sl1 RCURL ELSE LCURL statement_list:sl2 RCURL
+            IF LPAR L:l RPAR LCURL statement:s1 RCURL ELSE LCURL statement:s2 RCURL
             {:
-                System.out.println("At ifelse");
+//                System.out.println(l.getType().code);
                 if((Boolean) l.getType().isBool()){
-                    RESULT = new StatementList(Statement.ifthenelse(l, sl1, sl2));
+                    RESULT = Statement.ifthenelse(l, s1, s2);
                 }
                 else {
                      parser.type_error("l", " : expression in the if condition must be boolean.");
                 }
              :};
 
-statement_list ::= ID:i EQ E:e
+assignment ::= ID:i EQ E:e
                 {:
                 Memory m = Memory.getInstance();
                 if (!m.SymbolTable.containsKey(i)){
@@ -161,7 +140,7 @@ statement_list ::= ID:i EQ E:e
                 }
                 else {
                     if (m.SymbolTable.get(i).tag == e.getType().tag){
-                         RESULT = new StatementList(Statement.assignment(i,e));
+                         RESULT = Statement.assignment(i,e);
                     }
                     else {
                         parser.type_error("e", " : expression in the assignment statement must have the type " + m.SymbolTable.get(i).code);
@@ -169,8 +148,8 @@ statement_list ::= ID:i EQ E:e
                 }
                 :};
 
-statement_list  ::= PUBLISH LPAR E:e RPAR
-                {: RESULT = RESULT = new StatementList(Statement.print(e)); :};
+publish  ::= PUBLISH LPAR E:e RPAR
+                {: RESULT = Statement.print(e); :};
 
 E    ::= E:e PLUS T:t
                 {:

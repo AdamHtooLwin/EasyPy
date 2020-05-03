@@ -1,0 +1,33 @@
+int x, a; char y, s; bool z; float d;
+
+x = 0;
+z = true;
+y = "Hello world!";
+y = y + "hi";
+
+while (x < 5) {
+    if (z is false) {
+        z = true;
+    }else {
+        z = false;
+    };
+
+    if (x is 2) {
+        if (z is false) {
+            publish("X is 2 and z is fal#$@$se!!");
+        }
+        else {
+            publish("X is 2 and z is TRU$UE!!");
+        }
+    };
+
+    x = x + 1;
+    publish(z);
+    publish(x);
+};
+
+publish("");
+publish("Final Outputs");
+publish(x);
+publish(z);
+

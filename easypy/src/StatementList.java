@@ -5,40 +5,52 @@ import java.util.ArrayList;
 
 public class StatementList {
 
-    ArrayList<Statement> statementLists;
+    ArrayList<Statement> statementList;
 
+    // initialize new list with 1 statement
     public StatementList(Statement s){
-        statementLists  = new ArrayList<Statement>();
-        statementLists.add(s);
+        statementList  = new ArrayList<Statement>();
+        statementList.add(s);
     }
 
+    // add 1 statement into existing list
     public StatementList(StatementList l, Statement s){
-        statementLists = l.statementLists;
-        statementLists.add(s);
+        statementList = l.statementList;
+        statementList.add(s);
     }
 
-    public void execute(){
-        System.out.println("");
-        System.out.println("\n===========PROGRAM OUTPUT===========");
+    // concatenate two lists
+    public StatementList(StatementList l, StatementList s){
+        statementList = l.statementList;
+        statementList.addAll(s.statementList);
+    }
+
+    // get prefix for inner while, if statements
+    // syntactic sugar
+    public StringBuilder getPrefix(boolean inner){
         StringBuilder program = new StringBuilder();
 
-        for (Statement statement : statementLists) {
-            statement.execute();
-            program.append(statement.getPrefix()).append("\n");
+        for (Statement statement: statementList){
+            program.append(statement.getPrefix());
         }
-
-        System.out.println("===========PREFIX===========");
-        System.out.print(program);
+        return program;
     }
 
-    public void showStatements()
-    {
-        for (int i = 0; i < statementLists.size(); i++)
-        {
-            System.out.println("****************");
-            System.out.println(statementLists.get(i));
-            System.out.println("****************");
-            
+    // get prefix statements for all other statements
+    public StringBuilder getPrefix(){
+        StringBuilder program = new StringBuilder();
+
+        for (Statement statement: statementList){
+            program.append(statement.getPrefix()).append("\n");
+        }
+        return program;
+    }
+
+    // evaluate statements in list
+    public void execute(){
+
+        for (Statement statement : statementList) {
+            statement.execute();
         }
     }
 }

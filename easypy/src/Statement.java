@@ -3,18 +3,18 @@ package src;
 public class Statement
 {
     Memory m = Memory.getInstance();
+
+    // for errors
     src.parser parser = new parser();
+
     String statementType;
     String ID;
     Type type;
     Expression e;
-    Statement body;
-    Statement elsebody;
+    StatementList body;
+    StatementList elsebody;
+    StatementList whilebody;
     StatementList statementList;
-    String ID2;
-
-    //for logical
-    Expression left,right;
     
 
     public Statement(Type t, String ID, Expression e)
@@ -37,15 +37,15 @@ public class Statement
         this.e = e;
     }
 
-    // while and if
-    public Statement(Expression e, Statement body)
+    // while and if (revised)
+    public Statement(Expression e, StatementList body)
     {
         this.e = e;
         this.body = body;
     }
 
     // if else
-    public Statement(Expression e, Statement body1, Statement body2) {
+    public Statement(Expression e, StatementList body1, StatementList body2) {
         this.e = e;
 
         this.body = body1;
@@ -82,7 +82,7 @@ public class Statement
 
     }
 
-    public static Statement whileloop(Expression e, Statement whileBody)
+    public static Statement whileloop(Expression e, StatementList whileBody)
     {
         Statement loop = new Statement(e, whileBody);
         loop.statementType = "whileloop";
@@ -90,14 +90,14 @@ public class Statement
 
     }
 
-    public static Statement ifthen(Expression e, Statement ifbody)
+    public static Statement ifthen(Expression e, StatementList ifbody)
     {
         Statement ifthen = new Statement(e, ifbody);
         ifthen.statementType = "ifthen";
         return ifthen;
     }
     
-    public static Statement ifthenelse(Expression e, Statement ifbody, Statement elsebody) {
+    public static Statement ifthenelse(Expression e, StatementList ifbody, StatementList elsebody) {
 
         Statement ifthenelse = new Statement(e, ifbody, elsebody);
         ifthenelse.statementType = "ifthenelse";
@@ -123,36 +123,36 @@ public class Statement
 
     }
 
-    public String getstat() {
-//        System.out.println(statementType);
-
-        switch (statementType) {
-            case "assignment":
-                return ID + "=" + e.getexp();
-            case "intantiation":
-                return type.getCode() + " " + ID + "=" + e.getexp();
-            case "ifthen":
-                return "if " + e.getexp() + " " + body.getstat();
-            case "ifthenelse":
-                return "if " + e.getexp() + " " + body.getstat() + " else " + e.getexp() + " " + elsebody.getstat();
-            case "print":
-                return "publish (\"" + e.getexp() + "\")";
-            case "whileloop":
-                return "while (" + e.getexp() + ") { " + body.getstat() + " } ";
-            case "list":
-                return "list";
-            case "function-return":
-                return "function-return";
-            case "until_st":
-                return "until_st";
-            case "type-error":
-                return "type-error";
-            default:
-                return "unknown";
-        }
-
-    }
-
+//    public String getstat() {
+////        System.out.println(statementType);
+//
+//        switch (statementType) {
+//            case "assignment":
+//                return ID + "=" + e.getexp();
+//            case "intantiation":
+//                return type.getCode() + " " + ID + "=" + e.getexp();
+//            case "ifthen":
+//                return "if " + e.getexp() + " " + body.getstat();
+//            case "ifthenelse":
+//                return "if " + e.getexp() + " " + body.getstat() + " else " + e.getexp() + " " + elsebody.getstat();
+//            case "print":
+//                return "publish (\"" + e.getexp() + "\")";
+//            case "whileloop":
+//                return "while (" + e.getexp() + ") { " + body.getstat() + " } ";
+//            case "list":
+//                return "list";
+//            case "function-return":
+//                return "function-return";
+//            case "until_st":
+//                return "until_st";
+//            case "type-error":
+//                return "type-error";
+//            default:
+//                return "unknown";
+//        }
+//
+//    }
+//
     public String getPrefix() {
 //        System.out.println(statementType);
 
@@ -162,13 +162,13 @@ public class Statement
             case "intantiation":
                 return type.getCode() + " " + ID + "=" + e.getPrefix();
             case "ifthen":
-                return "if (" + e.getPrefix() + ") {" + body.getPrefix() + "}";
+                return "if (" + e.getPrefix() + ") {" + body.getPrefix(true).toString() + "}";
             case "ifthenelse":
-                return "if (" + e.getPrefix() + ") {" + body.getPrefix() + "} else {" + e.getPrefix() + " " + elsebody.getPrefix() + "}";
+                return "if (" + e.getPrefix() + ") {" + body.getPrefix(true).toString() + "} else {" + e.getPrefix() + " " + elsebody.getPrefix(true) + "}";
             case "print":
                 return "publish(" + e.getPrefix() + ")";
             case "whileloop":
-                return "while (" + e.getPrefix() + ") { " + body.getPrefix() + " } ";
+                return "while (" + e.getPrefix() + ") { " + body.getPrefix(true).toString() + " } ";
             case "list":
                 return "list";
             case "function-return":
@@ -250,7 +250,7 @@ public class Statement
             }
 
         } else if (statementType.equals("list")) {
-            for (Statement s : statementList.statementLists) {
+            for (Statement s : statementList.statementList) {
                 s.execute();
             }
         }

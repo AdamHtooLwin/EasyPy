@@ -78,11 +78,14 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 
 // helpers
 dot = "."
+alphabet = [a-zA-Z ]*
+digit    = [0-9]*
+specials = [!|@|#|$|%|\^|&|*|(|)|\']*
 
 // Data types
 int = 0 | [1-9][0-9]*
 float = [0-9]+{dot}[0-9]+
-char   = \"[a-zA-Z0-9!|@|#|$|%|\^|&|*|(|)|\' ]*\"
+char   = \"{alphabet}{specials}{digit}\"
 id = [A-Za-z_][A-Za-z_0-9]*
 
 boolean = true|false

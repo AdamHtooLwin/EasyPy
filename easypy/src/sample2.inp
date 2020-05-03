@@ -5,24 +5,23 @@ z = false;
 
 while (x < 5) {
     x = x + 1;
-    publish(x);
-};
+}
 
 publish(z);
 while (z is false) {
     z = true;
-};
+}
 publish(z);
 
 publish(x);
 
 if (x is 5) {
-    publish("x is 5!");
+    publish("x is 3");
 }
 else
 {
-    publish("x is not 5! Oh no!");
-};
+    publish("x is not 3");
+}
 
 y = "Hello world ";
 s = y + "everyone!";

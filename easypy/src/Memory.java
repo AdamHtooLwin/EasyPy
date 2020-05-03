@@ -27,30 +27,6 @@ public class Memory {
         return instance;
     }
 
-    public void createVariable(String varName){
-        ValueTable.put(varName, null);
-    }
-
-    public void assignInteger(String varName, Integer value){
-        ValueTable.put(varName, value);
-        //switch case or if to check for type from params
-    }
-
-    public void assignFloat(String varName, Float value){
-        ValueTable.put(varName, value);
-        //switch case or if to check for type from params
-    }
-
-    public void assignBoolean(String varName, Boolean value){
-        ValueTable.put(varName, value);
-        //switch case or if to check for type from params
-    }
-
-    public void assignString(String varName, String value){
-        ValueTable.put(varName, value);
-        //switch case or if to check for type from params
-    }
-
     public void memory_dump(){
         System.out.println("Value Table: " + ValueTable);
 //        System.out.println("Symbol Table: " + SymbolTable);

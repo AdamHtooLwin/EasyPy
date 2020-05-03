@@ -1,8 +1,10 @@
-int x, a; char y, s; bool z; float d;
+int x, a; char y, s, p; bool z; float d, e;
 
 x = 3;
+e = -2.0;
 a = 23 % 6;
 z = false;
+p = "I'm going to say, 'I love you.'";
 
 while (x < 5) {
     x = x + 1;

@@ -159,8 +159,8 @@ public class Statement
         switch (statementType) {
             case "assignment":
                 return "assign " + ID + " (" + e.getPrefix() + ")";
-            case "intantiation":
-                return type.getCode() + " " + ID + "=" + e.getPrefix();
+            case "declaration":
+                return ID + " : " + e.getPrefix();
             case "ifthen":
                 return "if (" + e.getPrefix() + ") {" + body.getPrefix(true).toString() + "}";
             case "ifthenelse":
@@ -169,12 +169,6 @@ public class Statement
                 return "publish(" + e.getPrefix() + ")";
             case "whileloop":
                 return "while (" + e.getPrefix() + ") { " + body.getPrefix(true).toString() + " } ";
-            case "list":
-                return "list";
-            case "function-return":
-                return "function-return";
-            case "until_st":
-                return "until_st";
             case "type-error":
                 return "type-error";
             default:

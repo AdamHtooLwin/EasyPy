@@ -30,10 +30,11 @@ terminal Float     FLOATING_LITERAL;
 terminal String    CHAR_LITERAL;
 terminal String    ID;
 
-non terminal                    program, declaration;
+non terminal                    program;
 non terminal Type               type;
+non terminal StringBuilder      declaration;
 
-non terminal Statement              statement, assignment, publish, until_st;
+non terminal Statement              publish;
 non terminal StatementList              statement_list, while, ifthen;
 non terminal Expression               E, T, F, L, logical;
 non terminal ArrayList<String>  id_list;
@@ -41,7 +42,7 @@ non terminal ArrayList<String>  id_list;
 /* Precedences */
 precedence left SEMI;
 precedence left PLUS, MINUS;
-precedence left TIMES;
+precedence left TIMES, DIVIDE;
    
 /* ------------Grammar rules----------- */
 
@@ -52,6 +53,7 @@ program ::= declaration:d SEMI statement_list:sl
                 sl.execute();
 
                 System.out.println("\n===========PREFIX===========");
+                System.out.println(d.toString());
                 System.out.println(sl.getPrefix().toString());
                 :};
 
@@ -73,6 +75,7 @@ statement_list ::= declaration:d SEMI statement_list:sl
 
 declaration ::= type:t id_list:il
                 {:
+                StringBuilder prefix = new StringBuilder();
                 for (String i : il){
 //                    System.out.println("Declaring variable " + i + " of type " + t.getCode());
                     Memory m = Memory.getInstance();
@@ -80,7 +83,10 @@ declaration ::= type:t id_list:il
                         parser.sem_error(i,"Duplicate declaration "+i);
                     }
                     m.SymbolTable.put(i, t);
+                    prefix.append(i + " : " + t.code);
+                    prefix.append("\n");
                 }
+                RESULT = prefix;
                 :};
 
 id_list ::=   id_list:il COMMA ID:i
@@ -130,7 +136,6 @@ statement_list ::=  IF LPAR L:l RPAR LCURL statement_list:sl RCURL
           |
             IF LPAR L:l RPAR LCURL statement_list:sl1 RCURL ELSE LCURL statement_list:sl2 RCURL
             {:
-                System.out.println("At ifelse");
                 if((Boolean) l.getType().isBool()){
                     RESULT = new StatementList(Statement.ifthenelse(l, sl1, sl2));
                 }
@@ -156,7 +161,11 @@ statement_list ::= ID:i EQ E:e
                 :};
 
 statement_list  ::= PUBLISH LPAR E:e RPAR
-                {: RESULT = RESULT = new StatementList(Statement.print(e)); :};
+                {: RESULT = new StatementList(Statement.print(e)); :}
+                |
+                PUBLISH LPAR L:l RPAR
+                {: RESULT = new StatementList(Statement.print(l)); :}
+                ;
 
 E    ::= E:e PLUS T:t
                 {:
@@ -195,6 +204,10 @@ F       ::= LPAR E:e RPAR
                 {:
                 RESULT = new Expression(n);
                 :}
+            | MINUS INTEGER_LITERAL:n
+                {:
+                RESULT = new Expression(-n);
+                :}
             | BOOLEAN_LITERAL:b
                 {:
                 RESULT = new Expression(b);
@@ -202,6 +215,10 @@ F       ::= LPAR E:e RPAR
             | FLOATING_LITERAL:f
                 {:
                 RESULT = new Expression(f);
+                :}
+            | MINUS FLOATING_LITERAL:f
+                {:
+                RESULT = new Expression(-f);
                 :}
             | CHAR_LITERAL:c
                 {:

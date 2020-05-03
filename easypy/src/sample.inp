@@ -7,12 +7,21 @@ z = false;
 p = "I'm going to say, 'I love you.'";
 
 while (x < 5) {
+    if (z is false){
+        publish("Z is false!");
+    } else {
+
+        publish("Z is TRUE!");
+    };
     x = x + 1;
     publish(x);
 };
 
 publish(z);
 while (z is false) {
+    if (e < 0.0){
+        publish("e is less than 0");
+    };
     z = true;
 };
 publish(z);

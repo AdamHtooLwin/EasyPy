@@ -32,30 +32,30 @@ public class StatementList {
 
     // get prefix for inner while, if statements
     // syntactic sugar
-    public StringBuilder getPrefix(boolean inner){
+    public StringBuilder getPrefix(boolean inner, javax.swing.JTextArea jTextAreaPrefix){
         StringBuilder program = new StringBuilder();
 
         for (Statement statement: statementList){
-            program.append(statement.getPrefix());
+            program.append(statement.getPrefix(jTextAreaPrefix));
         }
         return program;
     }
 
     // get prefix statements for all other statements
-    public StringBuilder getPrefix(){
+    public StringBuilder getPrefix(javax.swing.JTextArea jTextAreaPrefix){
         StringBuilder program = new StringBuilder();
 
         for (Statement statement: statementList){
-            program.append(statement.getPrefix()).append("\n");
+            program.append(statement.getPrefix(jTextAreaPrefix)).append("\n");
         }
         return program;
     }
 
     // evaluate statements in list
-    public void execute(){
+    public void execute(javax.swing.JTextArea jTextAreaOutput, javax.swing.JTextArea jTextAreaPrefix){
 
         for (Statement statement : statementList) {
-            statement.execute();
+            statement.execute(jTextAreaOutput, jTextAreaPrefix);
         }
     }
 }

@@ -253,7 +253,7 @@ public class Expression
         return s;
     }
 
-    public String getPrefix()
+    public String getPrefix(javax.swing.JTextArea jTextAreaPrefix)
     {
 
         String s = "";
@@ -273,54 +273,54 @@ public class Expression
         {
             if (Operator == sym.PLUS)
             {
-                s = "+ (" + Operands.getLeft().getPrefix() + " " + Operands.getRight().getPrefix() + ")";
+                s = "+ (" + Operands.getLeft().getPrefix(jTextAreaPrefix) + " " + Operands.getRight().getPrefix(jTextAreaPrefix) + ")";
             } else if (Operator == sym.MINUS)
             {
-                s = "- (" + Operands.getLeft().getPrefix() + " " + Operands.getRight().getPrefix() + ")";
+                s = "- (" + Operands.getLeft().getPrefix(jTextAreaPrefix) + " " + Operands.getRight().getPrefix(jTextAreaPrefix) + ")";
             }
             if (Operator == sym.TIMES)
             {
-                s = "* (" + Operands.getLeft().getPrefix() + " " + Operands.getRight().getPrefix() + ")";
+                s = "* (" + Operands.getLeft().getPrefix(jTextAreaPrefix) + " " + Operands.getRight().getPrefix(jTextAreaPrefix) + ")";
             }
             if (Operator == sym.DIVIDE)
             {
-                s = "/ (" + Operands.getLeft().getPrefix() + " " + Operands.getRight().getPrefix() + ")";
+                s = "/ (" + Operands.getLeft().getPrefix(jTextAreaPrefix) + " " + Operands.getRight().getPrefix(jTextAreaPrefix) + ")";
             }
             if (Operator == sym.MOD)
             {
-                s = "% (" + Operands.getLeft().getPrefix() + " " + Operands.getRight().getPrefix() + ")";
+                s = "% (" + Operands.getLeft().getPrefix(jTextAreaPrefix) + " " + Operands.getRight().getPrefix(jTextAreaPrefix) + ")";
             }
             if (Operator == sym.EQUAL)
             {
-                s = "is (" + Operands.getLeft().getPrefix() + " " + Operands.getRight().getPrefix() + ")";
+                s = "is (" + Operands.getLeft().getPrefix(jTextAreaPrefix) + " " + Operands.getRight().getPrefix(jTextAreaPrefix) + ")";
             }
             if (Operator == sym.NOTEQUAL)
             {
-                s = "is not (" + Operands.getLeft().getPrefix() + " " + Operands.getRight().getPrefix() + ")";
+                s = "is not (" + Operands.getLeft().getPrefix(jTextAreaPrefix) + " " + Operands.getRight().getPrefix(jTextAreaPrefix) + ")";
             }
             if (Operator == sym.GTE)
             {
-                s = ">= (" + Operands.getLeft().getPrefix() + " " + Operands.getRight().getPrefix() + ")";
+                s = ">= (" + Operands.getLeft().getPrefix(jTextAreaPrefix) + " " + Operands.getRight().getPrefix(jTextAreaPrefix) + ")";
             }
             if (Operator == sym.LTE)
             {
-                s = "<= (" + Operands.getLeft().getPrefix() + " " + Operands.getRight().getPrefix() + ")";
+                s = "<= (" + Operands.getLeft().getPrefix(jTextAreaPrefix) + " " + Operands.getRight().getPrefix(jTextAreaPrefix) + ")";
             }
             if (Operator == sym.LT)
             {
-                s = "< (" + Operands.getLeft().getPrefix() + " " + Operands.getRight().getPrefix() + ")";
+                s = "< (" + Operands.getLeft().getPrefix(jTextAreaPrefix) + " " + Operands.getRight().getPrefix(jTextAreaPrefix) + ")";
             }
             if (Operator == sym.GT)
             {
-                s = "> (" + Operands.getLeft().getPrefix() + " " + Operands.getRight().getPrefix() + ")";
+                s = "> (" + Operands.getLeft().getPrefix(jTextAreaPrefix) + " " + Operands.getRight().getPrefix(jTextAreaPrefix) + ")";
             }
             if (Operator == sym.AND)
             {
-                s = "and (" + Operands.getLeft().getPrefix() + ") (" + Operands.getRight().getPrefix() + ")";
+                s = "and (" + Operands.getLeft().getPrefix(jTextAreaPrefix) + ") (" + Operands.getRight().getPrefix(jTextAreaPrefix) + ")";
             }
             if (Operator == sym.OR)
             {
-                s = "or (" + Operands.getLeft().getPrefix() + " " + Operands.getRight().getPrefix() + ")";
+                s = "or (" + Operands.getLeft().getPrefix(jTextAreaPrefix) + " " + Operands.getRight().getPrefix(jTextAreaPrefix) + ")";
             }
         } else if (tag[5])
         {

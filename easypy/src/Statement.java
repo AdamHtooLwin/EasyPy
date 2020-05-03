@@ -153,22 +153,22 @@ public class Statement
 //
 //    }
 //
-    public String getPrefix() {
+    public String getPrefix(javax.swing.JTextArea jTextAreaPrefix) {
 //        System.out.println(statementType);
 
         switch (statementType) {
             case "assignment":
-                return "assign " + ID + " (" + e.getPrefix() + ")";
+                return "assign " + ID + " (" + e.getPrefix(jTextAreaPrefix) + ")";
             case "declaration":
-                return ID + " : " + e.getPrefix();
+                return ID + " : " + e.getPrefix(jTextAreaPrefix);
             case "ifthen":
-                return "if (" + e.getPrefix() + ") {" + body.getPrefix(true).toString() + "}";
+                return "if (" + e.getPrefix(jTextAreaPrefix) + ") {" + body.getPrefix(true, jTextAreaPrefix).toString() + "}";
             case "ifthenelse":
-                return "if (" + e.getPrefix() + ") {" + body.getPrefix(true).toString() + "} else {" + elsebody.getPrefix(true) + "}";
+                return "if (" + e.getPrefix(jTextAreaPrefix) + ") {" + body.getPrefix(true,jTextAreaPrefix).toString() + "} else {" + elsebody.getPrefix(true, jTextAreaPrefix) + "}";
             case "print":
-                return "publish(" + e.getPrefix() + ")";
+                return "publish(" + e.getPrefix(jTextAreaPrefix) + ")";
             case "whileloop":
-                return "while (" + e.getPrefix() + ") { " + body.getPrefix(true).toString() + " } ";
+                return "while (" + e.getPrefix(jTextAreaPrefix) + ") { " + body.getPrefix(true, jTextAreaPrefix).toString() + " } ";
             case "type-error":
                 return "type-error";
             default:
@@ -177,7 +177,7 @@ public class Statement
 
     }
 
-    public void execute() {
+    public void execute(javax.swing.JTextArea jTextAreaOutput, javax.swing.JTextArea jTextAreaPrefix) {
         /*
          * Retreive identifier from table, check its type, then assign
          */
@@ -199,7 +199,7 @@ public class Statement
             {
                 boolean b = (Boolean) e.getEntity().getValue();
                 if ((Boolean) e.getEntity().getValue()) {
-                    body.execute();
+                    body.execute(jTextAreaOutput, jTextAreaPrefix);
                 }
             } else {
                 parser.type_error("", "if expression must be boolean.");
@@ -208,9 +208,9 @@ public class Statement
             if (e.getEntity().getType().isBool()) //expr must be boolean
             {
                 if ((Boolean) e.getEntity().getValue()) {
-                    body.execute();
+                    body.execute(jTextAreaOutput, jTextAreaPrefix);
                 } else {
-                    elsebody.execute();
+                    elsebody.execute(jTextAreaOutput, jTextAreaPrefix);
                 }
             } else {
                 parser.type_error("", "if expression must be boolean.");
@@ -219,7 +219,7 @@ public class Statement
             if (e.getEntity().getType().isBool()) {
                 while (true) {
                     if ((Boolean) e.getEntity().getValue()) {
-                        body.execute();
+                        body.execute(jTextAreaOutput, jTextAreaPrefix);
                     } else {
                         break;
                     }
@@ -231,22 +231,24 @@ public class Statement
         } else if (statementType.equals("print")) {
             //need to check type for casting from Entity
             if (e.getType().isInteger()) {
-                System.out.println((Integer) e.getEntity().getValue());
+                jTextAreaOutput.setText(jTextAreaOutput.getText() + e.getEntity().getValue() + "\n");
+//                System.out.println((Integer) e.getEntity().getValue());
             }
             if (e.getType().isFloating_point()) {
-                System.out.println((Float) e.getEntity().getValue());
+                jTextAreaOutput.setText(jTextAreaOutput.getText() + (e.getEntity().getValue()) + "\n");
+
+//                System.out.println((Float) e.getEntity().getValue());
             }
             if (e.getType().isString()) {
-                System.out.println((String) e.getEntity().getValue());
+                jTextAreaOutput.setText(jTextAreaOutput.getText() + (e.getEntity().getValue()) + "\n");
+//                System.out.println((String) e.getEntity().getValue());
             }
             if (e.getType().isBool()) {
-                System.out.println((Boolean) e.getEntity().getValue());
+                jTextAreaOutput.setText(jTextAreaOutput.getText() + (e.getEntity().getValue()) + "\n");
+
+//                System.out.println((Boolean) e.getEntity().getValue());
             }
 
-        } else if (statementType.equals("list")) {
-            for (Statement s : statementList.statementList) {
-                s.execute();
-            }
         }
 
     }

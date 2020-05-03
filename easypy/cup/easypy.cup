@@ -48,13 +48,14 @@ precedence left TIMES, DIVIDE;
 
 program ::= declaration:d SEMI statement_list:sl
                 {:
-                System.out.println("");
-                System.out.println("\n===========PROGRAM OUTPUT===========");
-                sl.execute();
-
-                System.out.println("\n===========PREFIX===========");
-                System.out.println(d.toString());
-                System.out.println(sl.getPrefix().toString());
+                RESULT = sl;
+//                System.out.println("");
+//                System.out.println("\n===========PROGRAM OUTPUT===========");
+//                sl.execute();
+//
+//                System.out.println("\n===========PREFIX===========");
+//                System.out.println(d.toString());
+//                System.out.println(sl.getPrefix().toString());
                 :};
 
 statement_list ::= declaration:d SEMI statement_list:sl

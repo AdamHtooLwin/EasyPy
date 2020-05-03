@@ -5,9 +5,7 @@
  */
 package src;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileReader;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -97,19 +95,31 @@ public class EasyPyUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void compileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compileButtonActionPerformed
-//        try {
-//            Memory m = Memory.getInstance();
-//            InputStream stream = new ByteArrayInputStream(InputTextArea.getText().getBytes(StandardCharsets.UTF_8));
-//            Lexer l = new Lexer(stream);
-//            parser p = new parser(l);
-//            p.parse();
-//
-//            System.out.println("==========Compiler Memory Assets=========");
-//            m.memory_dump();
-//        } catch (Exception e) {
-//            /* do cleanup here -- possibly rethrow e */
-//            e.printStackTrace();
-//        }
+        try {
+            Memory m = Memory.getInstance();
+            m.ValueTable.clear();
+            m.SymbolTable.clear();
+            OutputTextArea.setText("");
+            PrefixTextArea.setText("");
+
+            InputStream stream = new ByteArrayInputStream(InputTextArea.getText().getBytes(StandardCharsets.UTF_8));
+            InputStreamReader reader = new InputStreamReader(stream);
+            Lexer l = new Lexer(reader);
+            parser p = new parser(l);
+            StatementList statementlist = (StatementList) p.parse().value;
+
+            System.out.println("");
+            System.out.println("\n===========PROGRAM OUTPUT===========");
+            statementlist.execute(OutputTextArea, PrefixTextArea);
+            PrefixTextArea.setText(statementlist.getPrefix(PrefixTextArea).toString());
+
+            System.out.println("==========Compiler Memory Assets=========");
+            m.memory_dump();
+        } catch (Exception e) {
+            OutputTextArea.setText("Syntax Error");
+            /* do cleanup here -- possibly rethrow e */
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_compileButtonActionPerformed
 
     /**

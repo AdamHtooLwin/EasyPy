@@ -91,42 +91,4 @@ public class Type {
     public static Type errortype() {
         return (Type) types.get(ERRORTYPE);
     }
-
-    public boolean isErrortype() {
-        if (tag == ERRORTYPE) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public static boolean equals(Type t1, Type t2){
-        boolean result = false;
-
-        if (t1.getCode().equals(t2.getCode())){
-            result = true;
-        }
-
-        return result;
-
-
-    }
-
-    public String getTypeName(){
-        String result = "";
-
-        if(isString()){
-            result = "String";
-        }else if(isBool()){
-            result = "Boolean";
-        }else if(isErrortype()){
-            result = "Error Type";
-        }else if(isFloating_point()){
-            result = "Float";
-        }else if(isInteger()){
-            result = "Integer";
-        }
-
-        return result;
-    }
 }
